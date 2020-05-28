@@ -1,0 +1,61 @@
+{% extends 'inc_mgmt/base.html' %}
+{% block content %}
+	<div class="ticket-list-actions">
+		<table>
+			<th><a class="btn btn-lg btn-outline-primary btn-block" href="{% url 'inc_mgmt:ticket_new' area_name=area_name %}"><span class="fas fa-plus" style="margin-right: 5px"></span>New ticket</a></th>
+			<th><a class="btn btn-secondary" style="margin-left: 20px; color: white;" href="{% url 'inc_mgmt:index' %}">Return</a></th>
+		</table>
+	</div>
+	<div style="float: left; padding: 10px;">
+		<h1>{{ area_name }}</h1>
+	</div>
+	<table class="table table-striped table-bordered table-hover">
+		<thead class="thead-dark">
+			<tr>
+				<th style=""/>
+				<th scope="col">Title</th>
+				<th scope="col">Status</th>
+				<th scope="col">Priority</th>
+				<th scope="col">Assigned to</th>
+				<th scope="col">Created by</th>
+				<th scope="col">Created date</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for ticket in area_ticket_list %}
+				<tr>
+					<td style="text-align: center; width: 50px;" class="align-middle">
+						<a href="{% url 'inc_mgmt:ticket_detail' ticket_id=ticket.id area_name=area_name %}" class="far fa-eye fa-lg"></a>
+					</td>
+					<td>{{ ticket.title }}</td>
+					<td>{{ ticket.status.status }}</td>
+					<td>{{ ticket.priority.priority }}</td>
+					<td>{{ ticket.status.assigned_to.name }}</td>
+					<td>{{ ticket.created_by.name }}</td>
+					<td>{{ ticket.time_created|date:'d/m/Y H:m' }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% if area_ticket_list.has_other_pages %}
+		<ul class="pagination">
+			{% if area_ticket_list.has_previous %}
+				<li class="page-item"><a class="page-link" href="?page={{ area_ticket_list.previous_page_number }}">Previous</a></li>
+			{% else %}
+				<li class="page-item disabled"><span class="page-link">Previous</span></li>
+			{% endif %}
+			{% for i in area_ticket_list.paginator.page_range %}
+				{% if area_ticket_list.number == i %}
+					<li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+				{% else %}
+					<li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+				{% endif %}
+			{% endfor %}
+			{% if area_ticket_list.has_next %}
+				<li class="page-item"><a class="page-link" href="?page={{ area_ticket_list.next_page_number }}">Next</a></li>
+			{% else %}
+				<li class="page-item disabled"><span>Next</span></li>
+			{% endif %}
+		</ul>
+	{% endif %}
+{% endblock %}

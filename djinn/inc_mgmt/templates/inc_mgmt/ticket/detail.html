@@ -1,0 +1,131 @@
+{% extends 'inc_mgmt/base.html' %}
+{% load filename %}
+{% block content %}
+	<form method="POST" class="ticket-form post-form" action="{% url 'inc_mgmt:ticket_change' ticket_id=ticket.id area_name=ticket.area.name %}">
+		{% csrf_token %}
+		<h2 class="ticket-id">TICKET#{{ ticket.id }}</h2>
+		<label for="select-area" class="ticket-label">Area</label>
+		<select name="area" id="select-area" class="ticket-select form-control" required="true" {% if not perms.inc_mgmt.change_ticket %} disabled {% endif %}>
+			{% for area in user_area_list %}
+				<option name="area" value="{{ area.name }}"  {% if ticket.area == area %} selected="true" {% endif %}>{{ area.name }}</option>
+			{% endfor %}
+		</select>
+		<label for="input-title" class="ticket-label">Title</label>
+		<input name="title" id="input-title" class="ticket-input-title form-control" disabled
+		required="true" autofocus="true" type="text" maxlength="50" size="50" value="{{ ticket.title }}">
+		<label for="input-description" class="ticket-label">Description</label>
+		<textarea name="description" id="input-description" class="ticket-textarea form-control" disabled
+		placeholder="Detail the reason for opening the ticket" required="true" maxlength="500">{{ ticket.description }}</textarea>
+		{% if ticket.file %}
+			<div class="ticket-file">
+				<label for="ticket-file">Attachment:</label>
+				<a id="ticket-file" href='{{ ticket.file.url }}' download>{{ ticket.file|filename }}</a><br />
+			</div>
+		{% endif %}
+		<table>
+			<th>
+				<label for="select-priority" class="ticket-label">Priority</label>
+				<select name="priority" id="select-priority" class="ticket-select form-control" required="true" {% if not perms.inc_mgmt.change_ticket %} disabled {% endif %}>
+					{% for priority in priority_list %}
+						<option value="{{ priority.priority }}" name="priority" {% if ticket.priority == priority %} selected="true" {% endif %}>{{ priority.priority }}</option>
+					{% endfor %}
+				</select>
+			</th>
+			<th>   
+				<label for="select-status" class="ticket-label">Status</label>
+				<select name="status" id="select-status" class="ticket-select form-control" required="true" {% if not perms.inc_mgmt.change_ticket %} disabled {% endif %}>
+					{% for status in status_list %}
+						<option value="{{ status.status }}" name="status" {% if ticket.status == status %} selected="true" {% endif %}>{{ status.status }}</option>
+					{% endfor %}
+				</select>
+			</th>
+			<th>
+				<label for="select-assigned_to" class="ticket-label">Assigned to</label>
+				<select name="assigned_to" id="select-assigned_to" class="ticket-select form-control" required="true" {% if not perms.inc_mgmt.change_ticket %} disabled {% endif %}>
+					<option name="assigned_to" {% if ticket.asigned_to == Null %} selected="true" {% endif %}></option>    	
+					{% for user in user_assign_list %}
+						<option value="{{ user.id }}" name="assigned_to" {% if ticket.assigned_to == user %} selected="true" {% endif %}>{{ user.name }}</option>
+					{% endfor %}
+				</select>
+			</th>
+		</table>
+		<div class="ticket-update-div">
+			<label for="textarea-comment" class="ticket-update-label">Update</label>
+			<table class="ticket-update-form">
+				<th>
+					<textarea name="comment" id="text-update" class="ticket-textarea form-control" type="text"
+					placeholder="Add a comment and/or an attachment for the ticket and click 'Add' button" maxlength="500"></textarea>
+					<input type="file" name="file" id="file-update" style="margin-left: 10px">
+				<th>
+				<th>
+					<a onclick="update_ticket('{{ ticket.id }}')" class="btn btn-lg btn-outline-primary btn-block ticket-btn-save">Add</a>
+				</th>
+			</table>
+			<div id="detail-update-list-ajax">
+				{% include "inc_mgmt/ticket/detail_update_list.html" %}
+			</div>
+		</div>
+		<table>
+			<th><button type="submit" class="btn btn-lg btn-primary btn-block auto-width-btn ticket-btn-save">Submit</button></th>
+			<th><a class="btn btn-secondary" style="margin-left: 20px; color: white;" href="{% url 'inc_mgmt:ticket_list' area_name=ticket.area.name %}">Return</a></th>
+		</table>
+	</form>
+	{% if form.errors %}
+		<div class="alert alert-danger" role="alert">There was an error saving your ticket, please try again.</div>
+	{% endif %}
+{% endblock %}
+{% block javascript %}
+	function update_ticket(ticket_id){
+		var csrftoken = Cookies.get('csrftoken');
+		function csrfSafeMethod(method) {
+			// These HTTP methods do not require CSRF protection
+			return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		}
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+		
+		var textarea_update = $("#text-update").val();
+		var formData = new FormData();
+		formData.append('file', $("#file-update")[0].files[0]);
+		formData.append('ticket_id', ticket_id);
+		formData.append('comment', textarea_update);
+		
+		$.ajax({
+			type: 'POST',
+			url: '{% url 'inc_mgmt:ticket_update' %}',
+			data: formData,
+			dataType: 'json',
+			contentType: false,
+			processData: false, 
+			success: function (data) {
+				if (data.updated) {
+					$('#detail-update-list-ajax').html(data.ticketupdate_list_html);
+					$('#text-update').val('');
+					$('#file-update').val('');
+				} else {
+					alert("Comment can't be blank");
+				}
+			}
+		});
+	};
+	
+	$(document).ready(function() {
+		$("#older-update-list-div").hide();
+		$("#toggle-older-update-list").click(function(){
+			$("#older-update-list-div").toggle('slow');
+			var label = $("#toggle-older-update-list").html();
+			if (label == 'See more') {
+				label = 'See less'
+			} else {
+				label = 'See more'
+			}
+			$("#toggle-older-update-list").html(label);
+		});
+	});
+{% endblock %}

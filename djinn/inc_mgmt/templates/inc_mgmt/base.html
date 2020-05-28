@@ -1,0 +1,46 @@
+{% load static %}
+<html>
+	<head>
+		{% include "inc_mgmt/base_js_css.html" %}
+		<title>DJINN</title>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="{% url 'inc_mgmt:index' %}"><image class="navbar-logo" src="{% static 'djinn/logo.png' %}"/></a>
+			<div class="container">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="{% url 'inc_mgmt:index' %}">Home<span class="sr-only">(current)</span></a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">Metrics<span class="sr-only">(current)</span></a>
+						</li>
+						{% if user.is_staff %}
+							<li class="nav-item">
+								<a class="nav-link" href="/admin">Admin<span class="sr-only">(current)</span></a>
+							</li>
+						{% endif %}
+					</ul>
+					{% if user.is_authenticated %}
+						<a class="nav-link" href="/logout">Logout</a>
+					{% else %}
+						<a class="nav-link" href="/login">Login</a>
+					{% endif %}
+				</div>
+			</div>
+		</nav>
+		<div class="content-wrapper">
+			{% block content %}
+			{% endblock %}
+		</div>
+		<script>
+			{% block javascript %}
+			{% endblock %}
+		</script>
+	</body>
+</html>

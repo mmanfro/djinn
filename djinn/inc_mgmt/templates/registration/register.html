@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		{% include "inc_mgmt/base_js_css.html" %}
+		<title>DJINN</title>
+	</head>
+	<body class="text-center">
+		{% if not register_success %}
+			<table class="register-success">
+				<tr>
+					<td>
+						<image class="logo-registration" src="{% static 'djinn/logo.png' %}" style="width: 330px;" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h2>Registration successful.</h2>
+					</td>
+				<tr>
+					<td>
+						<h6>You have received a link in your e-mail to confirm your account.</h6>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h6>If your account is not confirmed within 7 days it will be <span style="color: red">deleted</span> and you'll have to register again.</h6>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h6>After confirmation your account will be activated within 48 hours.</h6>
+					</td>
+				</tr>
+			</table>
+		{% else %}
+			<form class="form-registration" method="POST" action="{% url 'inc_mgmt:register' %}">
+				{% csrf_token %}
+				<image class="logo-registration" src="{% static 'djinn/logo.png' %}" />
+				<h1 class="h3 mb-3 font-weight-normal">Sign up</h1>
+				<label for="input-name" class="sr-only">Name</label>
+				<input name="name" id="input-name" class="form-control" placeholder="Name" required autofocus type="text">
+				<label for="input-email" class="sr-only">Email address</label>
+				<input name="username" id="input-email" class="form-control" placeholder="Email address" required type="email">
+				<label for="input-password" class="sr-only">Password</label>
+				<input name="password" id="input-password	" class="form-control" placeholder="Password" required type="password">
+				<label for="input-password2" class="sr-only">Repeat password</label>
+				<input name="password" id="input-password2" class="form-control" placeholder="Repeat password" required type="password">
+				<label for="input-knoxid" class="sr-only">Knox ID</label>
+				<select name="area" class="selectpicker select-area-register" multiple data-live-search="true" data-width="300px" title="Choose areas" data-size="5" data-actions-box="true" data-header="Which area(s) do you need access?" required>
+					{% for area in area_list %}
+						<option value="{{ area.name }}">{{ area.name }}</option>
+					{% endfor %}
+					</select>
+				<div>
+					<label class="label-addinfo-register">Additional info</label>
+					<input name="knoxid" id="input-knoxid" class="form-control" placeholder="Knox ID" type="text" maxlength="20">
+					<input name="phone" id="input-phone" class="form-control" placeholder="Phone (full nº, eg. 555499999999)" type="number" maxlength="20">
+				</div>
+				<button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+			</form>
+		{% endif %}
+		</body>
+</html>

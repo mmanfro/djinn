@@ -1,0 +1,31 @@
+{% load filename %}
+{% for ticketupdate in ticketupdate_list|slice:"0:3" %}
+	<div class="update-list-div">
+		<textarea name="_comment" id="input-update" class="ticket-textarea form-control" disabled maxlength="500">{{ ticketupdate.comment }}</textarea>
+		{% if ticketupdate.file %}
+			<div class="ticket-update-attachment">
+				<label for="file">Attachment:</label>
+				<a id="file" href='{{ ticketupdate.file.url }}' download>{{ ticketupdate.file|filename }}</a><br />
+			</div>
+		{% endif %}
+		<label class="label-ticket-update">Posted by {{ ticketupdate.created_by.name }} on {{ ticketupdate.posted_time }}</label>
+	</div>
+{% endfor %}
+<div id="older-update-list-div">
+	{% for ticketupdate in ticketupdate_list|slice:"3:300" %}
+		<div class="update-list-div">
+			<textarea name="_comment" id="input-update" class="ticket-textarea form-control" disabled
+			maxlength="500">{{ ticketupdate.comment }}</textarea>
+			{% if ticketupdate.file %}
+				<div class="ticket-update-attachment">
+					<label for="file">Attachment:</label>
+					<a id="file" href='{{ ticketupdate.file.url }}' download>{{ ticketupdate.file|filename }}</a><br />
+				</div>
+			{% endif %}
+			<label class="label-ticket-update">Posted by {{ ticketupdate.created_by.name }} on {{ ticketupdate.posted_time }}</label>
+		</div>
+	{% endfor %}
+</div>
+{% if ticketupdate_list|length > 3 %}
+	<a id="toggle-older-update-list" class="btn btn-lg btn-primary btn-block auto-width-btn" style="color: white; margin-top: 10px;">See more</a>
+{% endif %}

@@ -1,0 +1,10 @@
+{% extends 'inc_mgmt/base.html' %}
+{% block content %}
+	{% for area in area_list %}
+		<a href="{% url 'inc_mgmt:ticket_list' area_name=area.name %}">
+			<div class="jumbotron div-area-list">
+				<h1 class="display-4">{{ area.name }}</h1>
+			</div>
+		</a>
+	{% endfor %}
+{% endblock %}

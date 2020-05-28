@@ -1,0 +1,45 @@
+{% extends 'inc_mgmt/base.html' %}
+{% block content %}
+	<form method="POST" class="ticket-form post-form" enctype="multipart/form-data">
+		{% csrf_token %}
+		<label for="select-area" class="ticket-label">Area</label>
+		<select name="area" id="select-area" class="ticket-select form-control" required="true" disabled>
+			<option name="area" value="{{ area_name }}">{{ area_name }}</option>
+		</select>
+		<label for="input-title" class="ticket-label">Title</label>
+		<input name="title" id="input-title" class="ticket-input-title form-control" placeholder="Enter title" required="true" autofocus="true" type="text" maxlength="50" size="50">
+		<label for="textarea-description" class="ticket-label">Description</label>
+		<textarea name="description" id="textarea-description" class="ticket-textarea form-control" placeholder="Detail the reason for opening the ticket" required="true" maxlength="500"></textarea>
+		<table>
+			<th>
+				<label for="select-priority" class="ticket-label">Priority</label>
+				<select name="priority" id="select-priority" class="ticket-select form-control" required="true">
+					{% for priority in priority_list %}
+						<option value="{{ priority.priority }}" name="priority">{{ priority.priority }}</option>
+					{% endfor %}
+				</select>
+			</th>
+			<th>
+				<div class="new-ticket-attachment-wrap">
+					<div class="new-ticket-attachment-wrap2">
+						<label>Attachment</label>
+					</div>
+					<input type="file" name="file" id="file-update" style="margin: 10px 0 -10px -10px;">
+				</div>
+			</th>
+		</table>
+		<div class="ticket-new-actions">
+			<table>
+				<th>
+					<button type="submit" class="btn btn-lg btn-primary btn-block auto-width-btn ticket-btn-save">Submit</button>
+				</th>
+				<th>
+					<a class="btn btn-secondary" style="margin-left: 20px; color: white;" href="{% url 'inc_mgmt:index' %}">Cancel</a>
+				</th>
+			</table>
+		</div>
+	</form>
+	{% if form.errors %}
+		<div class="alert alert-danger" role="alert">There was an error saving your ticket, please try again.</div>
+	{% endif %}
+{% endblock %}
