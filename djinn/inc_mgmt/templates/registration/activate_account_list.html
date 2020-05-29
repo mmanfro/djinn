@@ -1,0 +1,48 @@
+{% extends 'inc_mgmt/base.html' %}
+{% block content %}
+	{% for user in user_list %}
+		<table class="table table-striped">
+			<tbody style="border: 2px solid #8553e2;">
+				<tr>
+					<td style="width: 60%">
+						<div>
+							<h3>{{ user.name }}</h3>
+						</div>
+					</td>
+					<td>
+						<div>
+							Activate
+						</div>
+					</td>
+					<td>
+						<button id="popover-content{{ user.id }}" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="right" data-content="">See requested areas</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<!-- <div id="popover-content{{ user.id }}" style="display: none;">
+			<ul class="list-group no-markers">
+				{% for area in user.areas.all %}
+					<li>
+						{{ area.name }}
+					</li>
+				{% endfor %}
+			</ul>
+		</div> -->
+	{% endfor %}
+{% endblock %}
+{% block script %}
+	$(document).ready(function() {
+		{% for user in user_list %}
+			$(function () {
+				$('#popover-content{{ user.id }}').popover({
+					html: true,
+					content: function() {
+					html = "<ul class='list-group no-markers'>{% for area in user.areas.all %}<li>{{ area.name }}</li>{% endfor %}</ul>"
+						return html;
+					}
+				});
+			})
+		{% endfor %}
+	});
+{% endblock %}

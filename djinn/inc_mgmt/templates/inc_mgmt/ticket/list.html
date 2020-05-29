@@ -1,13 +1,47 @@
 {% extends 'inc_mgmt/base.html' %}
 {% block content %}
-	<div class="ticket-list-actions">
-		<table>
-			<th><a class="btn btn-lg btn-outline-primary btn-block" href="{% url 'inc_mgmt:ticket_new' area_name=area_name %}"><span class="fas fa-plus" style="margin-right: 5px"></span>New ticket</a></th>
-			<th><a class="btn btn-secondary" style="margin-left: 20px; color: white;" href="{% url 'inc_mgmt:index' %}">Return</a></th>
-		</table>
-	</div>
-	<div style="float: left; padding: 10px;">
-		<h1>{{ area_name }}</h1>
+	<div>
+		<div class="ticket-list-actions">
+			<table>
+				<th><a class="btn btn-lg btn-outline-primary btn-block" href="{% url 'inc_mgmt:ticket_new' area_name=area_name %}"><span class="fas fa-plus" style="margin-right: 5px"></span>New ticket</a></th>
+				<th><a class="btn btn-secondary" style="margin-left: 20px; color: white;" href="{% url 'inc_mgmt:index' %}">Return</a></th>
+			</table>
+		</div>
+		<div style="float: left; padding: 10px;">
+			<h1>{{ area_name }}</h1>
+		</div>
+		{% if user.is_staff %}
+			<form class="ticket-list-filter">
+				<table>
+					<th>
+						<select multiple name="status-filter" class="selectpicker select-status-ticket-list" data-live-search="true" data-width="300px" title="Choose status" 
+							data-size="5" data-actions-box="true" data-header="">
+							{% for status in status_list %}
+								<option value="{{ status.status }}">{{ status.status }}</option>
+							{% endfor %}
+						</select>
+					</th>
+					<th>
+						<input name="title-description-filter" class="input-text title-description-filter" placeholder="Enter keywords for title or description" type="text" maxlength="100" size="50">
+					</th>
+					<th>
+						<div class="custom-control custom-checkbox" style="float: right; margin: 10px 0 0 30px">
+						    <input type="checkbox" class="custom-control-input" name="assigned-to-me" id="check-assigned-to-me">
+						    <label class="custom-control-label" for="check-assigned-to-me">Assigned to me</label>
+		  				</div>
+		  				<div class="custom-control custom-checkbox" style="float: right; margin: 10px 0 0 30px">
+						    <input type="checkbox" class="custom-control-input" name="created-by-me" id="check-created-by-me">
+						    <label class="custom-control-label" for="check-created-by-me">Created by me</label>
+		  				</div>
+		  			</th>
+		  			<th>
+		  				<div style="float: right; margin: 10px 0 0 10px">
+		  					<button class="btn btn-sm btn-primary " type="" style="margin:-3px 0 0 5px"><span class="fas fa-search" style=" margin-right: 5px"></span>Search</button>
+		  				</div>
+		  			</th>
+					</table>
+  			</form>
+		{% endif %}
 	</div>
 	<table class="table table-striped table-bordered table-hover">
 		<thead class="thead-dark">

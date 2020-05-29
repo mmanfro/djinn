@@ -1,0 +1,44 @@
+{% autoescape off %}
+	<html>
+		<head>
+			<style>
+				html {
+					font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+				}
+				a:hover {
+					color: #774acb !important;
+				}
+			</style>
+		</head>
+		<body style="padding: 20px; font-family: ">
+			<!-- <div style="border: 2px solid #6c398e; border-radius: 5px; padding: 20px; width: fit-content"> -->
+				<table>
+					<tr>
+						<td>
+							<img src="http://i.ibb.co/t23X5D3/logo.png" style="width: 330px; margin-bottom: 30px" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h1>Hi {{ user.name }},</h1>
+						</td>
+					<tr>
+						<td>
+							<h3>Please confirm your e-mail by clicking <a href="http://{{ domain }}{% url 'inc_mgmt:confirm_account' uidb64=uid token=token %}" style="color: #8553e2; text-decoration: none;">here</a>.</h3>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h3>If your account is not confirmed within 7 days it will be <span style="color: red">deleted</span> and you'll have to register again.</h3>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h3>After confirmation your account will be activated within 48 hours.</h3>
+						</td>
+					</tr>
+				</table>
+			<!-- </div> -->
+		</body>
+	</html>
+{% endautoescape %}

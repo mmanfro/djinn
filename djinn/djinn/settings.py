@@ -137,6 +137,17 @@ MEDIA_ROOT = 'inc_mgmt/media/'
 
 MEDIA_URL = '/media/'
 
-LOGIN_REDIRECT_URL = '/index/'
+LOGIN_REDIRECT_URL = '/'
 
 LOGOUT_REDIRECT_URL = '/login/'
+
+# Email
+EMAIL_HOST = 'smtp.gmail.com'
+
+EMAIL_PORT = 587
+
+EMAIL_HOST_USER = 'djinnincmgmt'
+
+EMAIL_HOST_PASSWORD = 'Dji//123'
+
+EMAIL_USE_TLS = True

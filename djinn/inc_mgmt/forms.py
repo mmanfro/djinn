@@ -30,7 +30,7 @@ class UserSelfCreationForm(forms.ModelForm):
     
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ('name', 'email', 'password1', 'password2', 'knoxid', 'phone')
         field_classes = {'email': UsernameField}
         
     error_messages = {

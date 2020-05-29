@@ -55,7 +55,7 @@
 				<th>
 					<textarea name="comment" id="text-update" class="ticket-textarea form-control" type="text"
 					placeholder="Add a comment and/or an attachment for the ticket and click 'Add' button" maxlength="500"></textarea>
-					<input type="file" name="file" id="file-update" style="margin-left: 10px">
+					<input type="file" name="file" id="file-update">
 				<th>
 				<th>
 					<a onclick="update_ticket('{{ ticket.id }}')" class="btn btn-lg btn-outline-primary btn-block ticket-btn-save">Add</a>
@@ -67,14 +67,14 @@
 		</div>
 		<table>
 			<th><button type="submit" class="btn btn-lg btn-primary btn-block auto-width-btn ticket-btn-save">Submit</button></th>
-			<th><a class="btn btn-secondary" style="margin-left: 20px; color: white;" href="{% url 'inc_mgmt:ticket_list' area_name=ticket.area.name %}">Return</a></th>
+			<th><a class="btn btn-secondary" style="margin-left: 20px; color: white;" href="{% url 'inc_mgmt:ticket_list' area_name=ticket.area.name filter='all' %}">Return</a></th>
 		</table>
 	</form>
 	{% if form.errors %}
 		<div class="alert alert-danger" role="alert">There was an error saving your ticket, please try again.</div>
 	{% endif %}
 {% endblock %}
-{% block javascript %}
+{% block script %}
 	function update_ticket(ticket_id){
 		var csrftoken = Cookies.get('csrftoken');
 		function csrfSafeMethod(method) {

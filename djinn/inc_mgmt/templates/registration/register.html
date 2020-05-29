@@ -6,14 +6,15 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		{% include "inc_mgmt/base_js_css.html" %}
+		<link rel="stylesheet" href="{% static 'inc_mgmt/css/registration.css' %}">
 		<title>DJINN</title>
 	</head>
 	<body class="text-center">
-		{% if not register_success %}
+		{% if register_success %}
 			<table class="register-success">
 				<tr>
 					<td>
-						<image class="logo-registration" src="{% static 'djinn/logo.png' %}" style="width: 330px;" />
+						<img class="logo-registration" src="{% static 'djinn/logo.png' %}" style="width: 330px;" />
 					</td>
 				</tr>
 				<tr>
@@ -37,31 +38,78 @@
 				</tr>
 			</table>
 		{% else %}
-			<form class="form-registration" method="POST" action="{% url 'inc_mgmt:register' %}">
-				{% csrf_token %}
-				<image class="logo-registration" src="{% static 'djinn/logo.png' %}" />
-				<h1 class="h3 mb-3 font-weight-normal">Sign up</h1>
-				<label for="input-name" class="sr-only">Name</label>
-				<input name="name" id="input-name" class="form-control" placeholder="Name" required autofocus type="text">
-				<label for="input-email" class="sr-only">Email address</label>
-				<input name="username" id="input-email" class="form-control" placeholder="Email address" required type="email">
-				<label for="input-password" class="sr-only">Password</label>
-				<input name="password" id="input-password	" class="form-control" placeholder="Password" required type="password">
-				<label for="input-password2" class="sr-only">Repeat password</label>
-				<input name="password" id="input-password2" class="form-control" placeholder="Repeat password" required type="password">
-				<label for="input-knoxid" class="sr-only">Knox ID</label>
-				<select name="area" class="selectpicker select-area-register" multiple data-live-search="true" data-width="300px" title="Choose areas" data-size="5" data-actions-box="true" data-header="Which area(s) do you need access?" required>
-					{% for area in area_list %}
-						<option value="{{ area.name }}">{{ area.name }}</option>
-					{% endfor %}
-					</select>
-				<div>
-					<label class="label-addinfo-register">Additional info</label>
-					<input name="knoxid" id="input-knoxid" class="form-control" placeholder="Knox ID" type="text" maxlength="20">
-					<input name="phone" id="input-phone" class="form-control" placeholder="Phone (full nº, eg. 555499999999)" type="number" maxlength="20">
-				</div>
-				<button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-			</form>
+		<table class="register-success">
+			<tr>
+				<td>
+					<form class="form-registration" method="POST" action="{% url 'inc_mgmt:register' %}">
+						{% csrf_token %}
+						<image class="logo-registration" src="{% static 'djinn/logo.png' %}" />
+						<h1 class="h3 mb-3 font-weight-normal">Sign up</h1>
+						<label for="input-name" class="sr-only">Name</label>
+						<input name="name" id="input-name" class="form-control" placeholder="Name" required autofocus type="text" value="{{ form.name.value|default_if_none:"" }}">
+						<label for="input-email" class="sr-only">Email address</label>
+						<input name="email" id="input-email" class="form-control" placeholder="Email address" required type="email" value="{{ form.email.value|default_if_none:"" }}">
+						<label for="input-password" class="sr-only">Password</label>
+						<input name="password1" id="input-password	" class="form-control" placeholder="Password" required type="password" autocomplete="new-password" data-toggle="popover" data-trigger="focus" data-content="">
+						<label for="input-password2" class="sr-only">Repeat password</label>
+						<input name="password2" id="input-password2" class="form-control" placeholder="Repeat password" required type="password" autocomplete="new-password">
+						<select multiple name="areas" class="selectpicker select-area-register" data-live-search="true" data-width="300px" title="Choose areas" 
+							data-size="5" data-actions-box="true" data-header="Which area(s) do you need access?" required>
+							{% for area in area_list %}
+								<option value="{{ area.name }}"
+									{% for selected_area in selected_areas %} 
+										{% if area.name == selected_area %}
+											selected
+										{% endif %}
+									{% endfor %}
+								>{{ area.name }}</option>
+							{% endfor %}
+						</select>
+						<div>
+							<label class="label-addinfo-register">Additional info</label>
+							<label for="input-knoxid" class="sr-only">Knox ID</label>
+							<input name="knoxid" id="input-knoxid" class="form-control" placeholder="Knox ID" type="text" maxlength="20" value="{{ form.knoxid.value|default_if_none:"" }}">
+							<input name="phone" id="input-phone" class="form-control" placeholder="Phone (full nº, eg. 555499999999)" type="phone" maxlength="20" value="{{ form.phone.value|default_if_none:"" }}">
+						</div>
+						<button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+					</form>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div style="margin: 20px 0 0 20px">
+							{% if form.errors %}
+							    {% for field in form %}
+							        {% for error in field.errors %}
+							            <div class="alert alert-danger">
+							                <strong>{{ error|escape }}</strong>
+							            </div>
+							        {% endfor %}
+							    {% endfor %}
+							    {% for error in form.non_field_errors %}
+							        <div class="alert alert-danger">
+							            <strong>{{ error|escape }}</strong>
+							        </div>
+							    {% endfor %}
+							{% endif %}
+						</div>
+					</td>
+				</tr>
+			</table>
 		{% endif %}
-		</body>
+	</body>
+	
+	<script>
+		$(document).ready(function() {
+			$(function () {
+			  $('[data-toggle="popover"]').popover({
+					html: true,
+					content: function() {
+					html = "{{ password_help_text }}"
+						return html;
+					}
+				});
+			})		
+		});
+	</script>
 </html>

@@ -1,9 +1,26 @@
 {% extends 'inc_mgmt/base.html' %}
+{% load area_ticket_status_count %}
 {% block content %}
 	{% for area in area_list %}
-		<a href="{% url 'inc_mgmt:ticket_list' area_name=area.name %}">
-			<div class="jumbotron div-area-list">
-				<h1 class="display-4">{{ area.name }}</h1>
+		<a href="{% url 'inc_mgmt:ticket_list' area_name=area.name filter='all' %}">
+			<div class="jumbotron div-area-list" style="align-content: center";>
+				<h1 class="display-4 area-name">{{ area.name }}</h1>
+				{% if user.is_staff %}
+					<div class="area-badges" style="margin: 20px 0 -50px 0;">
+						<table>
+							{% for status in status_list %}
+								<tr>
+									<td>
+										<span class="" style="margin-right: 5px; color: white;">{{ status.status }}</span
+									</td>
+									<td>
+										<span class="badge badge-light">{{ area|area_ticket_status_count:status.id }}</span>
+									</td>
+								</tr>
+							{% endfor %}
+						</table>
+					</div>
+				{% endif %}
 			</div>
 		</a>
 	{% endfor %}

@@ -8,19 +8,68 @@ from django.template.loader import render_to_string
 from django.contrib.auth.models import Permission
 from django.db.models import Q
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.mail import send_mail
+from inc_mgmt.token import account_activation_token
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text
+from django.http import response
+from django.contrib.auth import login, password_validation
+
 
 def self_register(request):
     area_list = Area.objects.all().order_by('name')
-    context = {'area_list': area_list}
+    context = {'area_list': area_list,
+               'password_help_text': password_validation.password_validators_help_text_html(),}
     if request.method == 'POST':
+        areas = request.POST.getlist('areas')
+        context['selected_areas'] = areas
         form = UserSelfCreationForm(request.POST)
+        context['form'] = form
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
+            user.areas.set(Area.objects.all().filter(name__in=areas))
+            user.save()
             context['register_success'] = True
-            return render(request, 'registration/register.html', context)
+            
+            # Send confirmation e-mail
+            current_site = get_current_site(request)
+            html_message = render_to_string('registration/email_confirmation.html', 
+                                            {'user': user, 
+                                            'domain': current_site.domain, 
+                                            'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                                            'token':account_activation_token.make_token(user),})
+            send_mail(
+                'Activate your DJINN account',
+                '',
+                'djinnincmgmt@gmail.com',
+                ['mauriciomanfro@gmail.com'],
+#                 [user.email],
+                html_message=html_message,
+            )
+        return render(request, 'registration/register.html', context)
     else:
         return render(request, 'registration/register.html', context)
+
+def confirm_account(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_trusty = True
+        user.save()
+        login(request, user)
+        return render(request, 'registration/confirm_account.html')
+    else:
+        return response('Activation link is invalid!')
+   
+def activate_accounts_list(request):
+    user_list = User.objects.all()
+    context = {'user_list': user_list}
+    return render(request, 'registration/activate_account_list.html', context)
 
 def index(request):
     return area_list(request)
@@ -28,14 +77,17 @@ def index(request):
 @login_required(login_url='/login')
 def area_list(request):
     area_list = Area.objects.all().filter(user__id=request.user.id)
-    context = {'area_list': area_list}
+    status_list = Status.objects.all()
+    context = {'area_list': area_list,
+               'status_list': status_list}
     return render(request, 'inc_mgmt/area_list.html', context)
 
 @login_required(login_url='/login')
-def ticket_list(request, area_name):
+def ticket_list(request, area_name, filter):
     get_object_or_404(request.user.areas.all().filter(name=area_name))
-    
     area_ticket_list = Ticket.objects.all().filter(area_id=Area.objects.all().filter(name=area_name)[0]).order_by('-time_created')
+    status_list = Status.objects.all()
+    context = {'status_list': status_list,}
     page = request.GET.get('page', 1)
     paginator = Paginator(area_ticket_list, 20)
     try:
@@ -45,9 +97,8 @@ def ticket_list(request, area_name):
     except EmptyPage:
         p_area_ticket_list = paginator.page(paginator.num_pages)
         
-    context = {'area_ticket_list': p_area_ticket_list,
-               'area_name': area_name,
-               }
+    context['area_ticket_list'] = p_area_ticket_list
+    context['area_name'] = area_name
     return render(request, 'inc_mgmt/ticket/list.html', context)
 
 @login_required(login_url='/login')

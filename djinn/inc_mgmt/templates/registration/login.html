@@ -6,22 +6,43 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		{% include "inc_mgmt/base_js_css.html" %}
+		<link rel="stylesheet" href="{% static 'inc_mgmt/css/registration.css' %}">
 		<title>DJINN</title>
 	</head>
 	<body class="text-center">
-		<form class="form-registration" method="POST" action="{% url 'inc_mgmt:login' %}">
-			{% csrf_token %}
-			<image class="logo-registration" src="{% static 'djinn/logo.png' %}"/>
-			<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-			<label for="input-email" class="sr-only">Email address</label>
-			<input name="username" id="input-email" class="form-control" placeholder="Email address" required autofocus type="email">
-			<label for="input-password" class="sr-only">Password</label>
-			<input name="password" id="input-password" class="form-control" placeholder="Password" required type="password">
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
-			<p class="mt-3 mb-3 text-muted">Forgot your password? <a href="#">Click here.</a></p>
-		</form>
-		{% if form.errors %}
-			<div class="alert alert-danger" role="alert">Your username and password didn't match, please try again.</div>
-		{% endif %}
+		<table class="register-success">
+			<tr>
+				<td>
+					<form class="form-registration" method="POST" action="{% url 'inc_mgmt:login' %}">
+						{% csrf_token %}
+						<img class="logo-registration" src="{% static 'djinn/logo.png' %}"/>
+						<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+						<label for="input-email" class="sr-only">Email address</label>
+						<input name="username" id="input-email" class="form-control" placeholder="Email address" required autofocus type="email">
+						<label for="input-password" class="sr-only">Password</label>
+						<input name="password" id="input-password" class="form-control" placeholder="Password" required type="password">
+						<button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+						<p class="mt-3 mb-3 text-muted">Forgot your password? <a href="#">Click here.</a></p>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					{% if form.errors %}
+						<div class="alert alert-danger" role="alert">
+							<span>Your username and password didn't match, please try again.</span>
+						</div>
+					{% endif %}
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div>
+						<a class="btn btn-sm btn-dark" href="/register">Register new account</a>
+					</div>
+				</td>
+			</tr>
+			
+		</table>
 	</body>
 </html>

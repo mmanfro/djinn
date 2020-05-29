@@ -43,9 +43,9 @@ class UserAdmin(admin.ModelAdmin):
         }),
     )
     
-    list_display = ('name',)  # Contain only fields in your `custom-user-model`
+    list_display = ('name', 'email', 'is_staff', 'is_superuser', 'is_active' )  # Contain only fields in your `custom-user-model`
     list_filter = ()  # Contain only fields in your `custom-user-model` intended for filtering. Do not include `groups`since you do not have it
-    search_fields = ()  # Contain only fields in your `custom-user-model` intended for searching
+    search_fields = ('name', 'email', 'knoxid',)  # Contain only fields in your `custom-user-model` intended for searching
     ordering = ()  # Contain only fields in your `custom-user-model` intended to ordering
     filter_horizontal = () # Leave it empty. You have neither `groups` or `user_permissions`
 #     fieldsets = UserAdmin.fieldsets + (

@@ -2,14 +2,15 @@
 <html>
 	<head>
 		{% include "inc_mgmt/base_js_css.html" %}
+		{% block extra_js_css %}
+		{% endblock %}
 		<title>DJINN</title>
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 			<a class="navbar-brand" href="{% url 'inc_mgmt:index' %}"><image class="navbar-logo" src="{% static 'djinn/logo.png' %}"/></a>
 			<div class="container">
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -39,7 +40,7 @@
 			{% endblock %}
 		</div>
 		<script>
-			{% block javascript %}
+			{% block script %}
 			{% endblock %}
 		</script>
 	</body>
