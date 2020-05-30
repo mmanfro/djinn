@@ -11,32 +11,46 @@
 			<h1>{{ area_name }}</h1>
 		</div>
 		{% if user.is_staff %}
-			<form class="ticket-list-filter">
+			<form class="ticket-list-filter" method="GET">
 				<table>
 					<th>
 						<select multiple name="status-filter" class="selectpicker select-status-ticket-list" data-live-search="true" data-width="300px" title="Choose status" 
 							data-size="5" data-actions-box="true" data-header="">
 							{% for status in status_list %}
-								<option value="{{ status.status }}">{{ status.status }}</option>
+								<option value="{{ status.id }}"
+									{% for statusf in status_filter %} 
+										{% if statusf.id == status.id %}
+											selected
+										{% endif %}
+									{% endfor %}
+								>{{ status.status }}</option>
 							{% endfor %}
 						</select>
 					</th>
 					<th>
-						<input name="title-description-filter" class="input-text title-description-filter" placeholder="Enter keywords for title or description" type="text" maxlength="100" size="50">
+						<input value="{{ title_descr_filter }}" name="title-description-filter" class="input-text title-description-filter" placeholder="Enter keywords for title or description" type="text" maxlength="100" size="50">
 					</th>
 					<th>
 						<div class="custom-control custom-checkbox" style="float: right; margin: 10px 0 0 30px">
-						    <input type="checkbox" class="custom-control-input" name="assigned-to-me" id="check-assigned-to-me">
+						    <input type="checkbox" class="custom-control-input" name="assigned-to-me" id="check-assigned-to-me" 
+						    	{% if atm_filter %}	
+						    		checked
+						    	{% endif %}
+						    >
 						    <label class="custom-control-label" for="check-assigned-to-me">Assigned to me</label>
 		  				</div>
 		  				<div class="custom-control custom-checkbox" style="float: right; margin: 10px 0 0 30px">
-						    <input type="checkbox" class="custom-control-input" name="created-by-me" id="check-created-by-me">
+						    <input type="checkbox" class="custom-control-input" name="created-by-me" id="check-created-by-me"
+						    	{% if cbm_filter %}	
+						    		checked
+						    	{% endif %}
+						    >
 						    <label class="custom-control-label" for="check-created-by-me">Created by me</label>
 		  				</div>
 		  			</th>
 		  			<th>
 		  				<div style="float: right; margin: 10px 0 0 10px">
-		  					<button class="btn btn-sm btn-primary " type="" style="margin:-3px 0 0 5px"><span class="fas fa-search" style=" margin-right: 5px"></span>Search</button>
+		  					<button class="btn btn-sm btn-primary " type="submit" style="margin:-3px 0 0 5px"><span class="fas fa-search" style=" margin-right: 5px"></span>Search</button>
 		  				</div>
 		  			</th>
 					</table>
@@ -64,7 +78,7 @@
 					<td>{{ ticket.title }}</td>
 					<td>{{ ticket.status.status }}</td>
 					<td>{{ ticket.priority.priority }}</td>
-					<td>{{ ticket.status.assigned_to.name }}</td>
+					<td>{{ ticket.assigned_to.name }}</td>
 					<td>{{ ticket.created_by.name }}</td>
 					<td>{{ ticket.time_created|date:'d/m/Y H:m' }}</td>
 				</tr>

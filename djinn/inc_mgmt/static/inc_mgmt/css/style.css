@@ -69,6 +69,18 @@ input[type="color"]:focus,
   outline: 0 none;
 }
 
+.navbar {
+	box-shadow: 0 2px 5px #8553e2;
+}
+
+.navbar a:hover:not(.dropdown-item) {
+	color: #fff !important;
+}
+
+a.dropdown-item:hover {
+	background-color: #f2f0f3 !important;
+}
+
 .navbar-logo {
 	width: 200px;
 	margin-left: 0;
@@ -81,7 +93,7 @@ input[type="color"]:focus,
 	margin-left: 0;
 	border: 10px;
 	/* box-shadow: 0 1px 6px #8553e2, 0 1px 4px #8553e2; */
-	filter: drop-shadow(0.5px 0.5px 5px #000);
+	/* filter: drop-shadow(0.5px 0.5px 5px #000); */
 }
 
 .btn-outline-primary {
@@ -137,7 +149,7 @@ input[type="color"]:focus,
 	width: fit-content;
 	margin-left: 200px;
 	padding: 10px;
-	border: 2px solid #343a40;
+	border: 1px solid #343a40;
 	border-radius: 5px;
 	/* box-shadow: 0 1px 6px  #8553e2; */
 }
@@ -245,4 +257,7 @@ table th {
 /* activate_account_list */
 .list-group.no-markers {
 	list-style: none;
+}
+
+.table table-striped {
 }

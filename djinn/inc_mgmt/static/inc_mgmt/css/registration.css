@@ -3,6 +3,10 @@ body {
 	height: 100%;
 }
 
+a.btn {
+	color: #fff !important;
+}
+
 body {
 	display: -ms-flexbox;
 	display: -webkit-box;

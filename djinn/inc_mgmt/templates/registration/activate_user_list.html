@@ -1,0 +1,92 @@
+{% extends 'inc_mgmt/base.html' %}
+{% block content %}
+	{% for user in user_list %}
+		<table class="table table-striped" style="box-shadow: 0 0 3px 1px #8553e2; width: 60%; margin: auto">
+			<tbody>
+				<tr>
+					<td style="width: 50%">
+						<div>
+							<h3>{{ user.name }}</h3>
+							<a href="mailto:{{ user.email }}" target="_blank"><h6 style="margin-top: -10px">{{ user.email }}</h6></a>
+						</div>
+					</td>
+					<td style="text-align: right;">
+						<button id="activate-user" onclick="activate_user('{{ user.id }}')" type="button" class="btn btn-success">Activate</button>
+						<button id="popover-content{{ user.id }}" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="right" data-content="">See requested areas</button>
+						<button id="toggle-user-detail" onclick="detail_user('{{ user.id }}')" type="button" class="btn btn-info"><span id="icon-user-detail" class="fas fa-plus"></span> Details</button>
+					</td>
+				</tr>
+				<tr id="detail-user{{ user.id }}" style="display: none">
+					<td>
+						<h6 style="margin-bottom: 0px">Requested areas:</h6>
+						<ul class='list-group no-markers'>
+							{% for area in user.areas.all %}
+								<li>{{ area.name }}</li>
+							{% endfor %}
+						</ul>
+					</td>
+					<td>
+						<h6 style="margin-bottom: 0px">KnoxID:</h6>{{ user.knoxid }}
+						<h6 />
+						<h6 style="margin-bottom: 0px">Phone:</h6>{{ user.phone }}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	{% endfor %}
+{% endblock %}
+{% block script %}
+	$(document).ready(function() {
+		{% for user in user_list %}
+			$(function () {
+				$('#popover-content{{ user.id }}').popover({
+					html: true,
+					content: function() {
+					html = "<ul class='list-group no-markers'>{% for area in user.areas.all %}<li>{{ area.name }}</li>{% endfor %}</ul>"
+						return html;
+					}
+				});
+			})
+		{% endfor %}
+	});
+	
+	function activate_user(user_id) {
+		var csrftoken = Cookies.get('csrftoken');
+		function csrfSafeMethod(method) {
+			// These HTTP methods do not require CSRF protection
+			return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		}
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+		
+		$.ajax({
+			type: 'POST',
+			url: '{% url 'inc_mgmt:activate_user' %}',
+			data: user_id,
+			dataType: 'text',
+			contentType: false,
+			processData: false, 
+			success: function (data) {
+				var activated = $.parseJSON(data)
+				if (activated) {
+					$('#activate-user').html("<i id='user-activated-icon' class='fas fa-check'></i> Activated");
+					$('#activate-user').prop('disabled', true)
+				} else {
+					alert("Failed to activate, please contact system administrator.");
+				}
+			}
+		});
+	}
+	
+	function detail_user(user_id) {
+		$('#detail-user'+user_id).toggle();
+		$('#icon-user-detail').toggleClass("fa-plus");
+		$('#icon-user-detail').toggleClass("fa-minus");
+	}
+{% endblock %}

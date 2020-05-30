@@ -15,6 +15,9 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.http import response
 from django.contrib.auth import login, password_validation
+from functools import reduce
+import operator
+import json
 
 
 def self_register(request):
@@ -66,10 +69,22 @@ def confirm_account(request, uidb64, token):
     else:
         return response('Activation link is invalid!')
    
-def activate_accounts_list(request):
-    user_list = User.objects.all()
+def activate_user_list(request):
+    user_list = User.objects.all().filter(is_active=False, is_trusty=True)
     context = {'user_list': user_list}
-    return render(request, 'registration/activate_account_list.html', context)
+    return render(request, 'registration/activate_user_list.html', context)
+
+def activate_user(request):
+    data = {'activated': False,}
+    
+    if request.method == "POST":
+        user_id = json.loads(request.body)
+        user = User.objects.get(pk=user_id)
+        user.is_active = True
+        user.save()
+        data['activated'] = True
+        
+    return JsonResponse(data)
 
 def index(request):
     return area_list(request)
@@ -83,11 +98,39 @@ def area_list(request):
     return render(request, 'inc_mgmt/area_list.html', context)
 
 @login_required(login_url='/login')
-def ticket_list(request, area_name, filter):
+def ticket_list(request, area_name):
     get_object_or_404(request.user.areas.all().filter(name=area_name))
     area_ticket_list = Ticket.objects.all().filter(area_id=Area.objects.all().filter(name=area_name)[0]).order_by('-time_created')
     status_list = Status.objects.all()
     context = {'status_list': status_list,}
+        
+    if request.method == 'GET':
+        status_filter = request.GET.getlist('status-filter')
+        title_descr_filter = request.GET.get('title-description-filter')
+        atm_filter = request.GET.get('assigned-to-me')
+        cbm_filter = request.GET.get('created-by-me')
+        
+        if status_filter:
+            area_ticket_list = area_ticket_list.filter(status__in=status_filter)
+            context['status_filter'] = Status.objects.all().filter(id__in=status_filter)
+            print(status_filter)
+        if title_descr_filter:
+            title_descr_filter = title_descr_filter.split(' ')
+            query1 = reduce(operator.or_, (Q(title__contains = word) for word in title_descr_filter))
+            query2 = reduce(operator.or_, (Q(description__contains = word) for word in title_descr_filter))
+            area_ticket_list = area_ticket_list.filter(query1 | query2)
+            
+            x = ''
+            for i in range(len(title_descr_filter)):
+                x += title_descr_filter[i] + ' '
+            context['title_descr_filter'] = x
+        if atm_filter:
+            area_ticket_list = area_ticket_list.filter(assigned_to=request.user)
+            context['atm_filter'] = atm_filter
+        if cbm_filter:
+            area_ticket_list = area_ticket_list.filter(created_by=request.user)
+            context['cbm_filter'] = cbm_filter
+
     page = request.GET.get('page', 1)
     paginator = Paginator(area_ticket_list, 20)
     try:
@@ -99,6 +142,7 @@ def ticket_list(request, area_name, filter):
         
     context['area_ticket_list'] = p_area_ticket_list
     context['area_name'] = area_name
+    
     return render(request, 'inc_mgmt/ticket/list.html', context)
 
 @login_required(login_url='/login')
