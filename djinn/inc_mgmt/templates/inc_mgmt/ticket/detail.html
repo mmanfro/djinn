@@ -23,17 +23,17 @@
 			</div>
 		{% endif %}
 		<table>
-			<th>
+			<th style="padding-right: 20px">
 				<label for="select-priority" class="ticket-label">Priority</label>
-				<select name="priority" id="select-priority" class="ticket-select form-control" required="true" {% if not perms.inc_mgmt.change_ticket %} disabled {% endif %}>
+				<select name="priority" id="select-priority" class="ticket-select form-control selectpicker" required="true" {% if not perms.inc_mgmt.change_ticket %} disabled {% endif %}>
 					{% for priority in priority_list %}
 						<option value="{{ priority.priority }}" name="priority" {% if ticket.priority == priority %} selected="true" {% endif %}>{{ priority.priority }}</option>
 					{% endfor %}
 				</select>
 			</th>
-			<th>   
+			<th style="padding-right: 20px">   
 				<label for="select-status" class="ticket-label">Status</label>
-				<select name="status" id="select-status" class="ticket-select form-control" required="true" {% if not perms.inc_mgmt.change_ticket %} disabled {% endif %}>
+				<select name="status" id="select-status" class="ticket-select form-control selectpicker" required="true" {% if not perms.inc_mgmt.change_ticket %} disabled {% endif %}>
 					{% for status in status_list %}
 						<option value="{{ status.status }}" name="status" {% if ticket.status == status %} selected="true" {% endif %}>{{ status.status }}</option>
 					{% endfor %}
@@ -41,8 +41,8 @@
 			</th>
 			<th>
 				<label for="select-assigned_to" class="ticket-label">Assigned to</label>
-				<select name="assigned_to" id="select-assigned_to" class="ticket-select form-control" required="true" {% if not perms.inc_mgmt.change_ticket %} disabled {% endif %}>
-					<option name="assigned_to" {% if ticket.asigned_to == Null %} selected="true" {% endif %}></option>    	
+				<select name="assigned_to" id="select-assigned_to" class="ticket-select form-control selectpicker" required="true" {% if not perms.inc_mgmt.change_ticket %} disabled {% endif %}>
+					<option name="assigned_to" {% if ticket.asigned_to == Null %} selected {% endif %} style="display:none"></option>    	
 					{% for user in user_assign_list %}
 						<option value="{{ user.id }}" name="assigned_to" {% if ticket.assigned_to == user %} selected="true" {% endif %}>{{ user.name }}</option>
 					{% endfor %}
@@ -58,7 +58,7 @@
 					<input type="file" name="file" id="file-update" style="margin-top: 10px">
 				<th>
 				<th>
-					<a onclick="update_ticket('{{ ticket.id }}')" class="btn btn-lg btn-outline-primary btn-block ticket-btn-save">Add</a>
+					<a onclick="update_ticket('{{ ticket.id }}')" class="btn btn-lg btn-outline-primary btn-block ticket-btn-save"><i class="fas fa-plus"></i> Add</a>
 				</th>
 			</table>
 			<div id="detail-update-list-ajax">

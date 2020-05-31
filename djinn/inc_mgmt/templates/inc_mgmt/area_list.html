@@ -2,16 +2,19 @@
 {% load area_ticket_status_count %}
 {% block content %}
 	{% for area in area_list %}
-		<a href="{% url 'inc_mgmt:ticket_list' area_name=area.name %}">
-			<div class="jumbotron div-area-list" style="align-content: center";>
-				<h1 class="display-4 area-name">{{ area.name }}</h1>
+			<div id="area-div {{ area.name }}" onclick="click_link('{{ area.name }}')" class="jumbotron div-area-list" style="align-content: center; cursor: pointer">
+				<a id="area-link{{ area.name }}" href="{% url 'inc_mgmt:ticket_list' area_name=area.name %}">
+					<h1 class="display-4 area-name" style="color: #fff">{{ area.name }}</h1>
+				</a>
 				{% if user.is_staff %}
 					<div class="area-badges" style="margin: 20px 0 -50px 0;">
 						<table>
 							{% for status in status_list %}
 								<tr>
 									<td>
-										<span class="" style="margin-right: 5px; color: white;">{{ status.status }}</span
+										<a href="{% url 'inc_mgmt:ticket_list' area_name=area.name fast_status_filter=status.id %}">
+											<span class="" style="margin-right: 5px; color: white;">{{ status.status }}</span>
+										</a>
 									</td>
 									<td>
 										<span class="badge badge-light">{{ area|area_ticket_status_count:status.id }}</span>
@@ -21,7 +24,14 @@
 						</table>
 					</div>
 				{% endif %}
+				<div style="float:right; margin-bottom: -50px">
+					<a href="{% url 'inc_mgmt:ticket_new' area_name=area.name %}"><i class="fas fa-plus fa-2x" style="color: #fff"></i></a>
+				</div>
 			</div>
-		</a>
 	{% endfor %}
+{% endblock %}
+{% block script %}
+	function click_link(area) {
+		window.location = area+'/ticket/list/';
+	};
 {% endblock %}

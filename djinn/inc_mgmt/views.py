@@ -68,12 +68,18 @@ def confirm_account(request, uidb64, token):
         return render(request, 'registration/confirm_account.html')
     else:
         return response('Activation link is invalid!')
-   
+
+@login_required(login_url='/login')
+def index(request):
+    return area_list(request)
+
+@login_required(login_url='/login')   
 def activate_user_list(request):
     user_list = User.objects.all().filter(is_active=False, is_trusty=True)
     context = {'user_list': user_list}
     return render(request, 'registration/activate_user_list.html', context)
 
+@login_required(login_url='/login')
 def activate_user(request):
     data = {'activated': False,}
     
@@ -86,9 +92,6 @@ def activate_user(request):
         
     return JsonResponse(data)
 
-def index(request):
-    return area_list(request)
-
 @login_required(login_url='/login')
 def area_list(request):
     area_list = Area.objects.all().filter(user__id=request.user.id)
@@ -98,11 +101,15 @@ def area_list(request):
     return render(request, 'inc_mgmt/area_list.html', context)
 
 @login_required(login_url='/login')
-def ticket_list(request, area_name):
+def ticket_list(request, area_name, fast_status_filter=None):
     get_object_or_404(request.user.areas.all().filter(name=area_name))
     area_ticket_list = Ticket.objects.all().filter(area_id=Area.objects.all().filter(name=area_name)[0]).order_by('-time_created')
     status_list = Status.objects.all()
     context = {'status_list': status_list,}
+    
+    if fast_status_filter:
+        area_ticket_list = area_ticket_list.filter(status__in=fast_status_filter)
+        context['status_filter'] = Status.objects.all().filter(id__in=fast_status_filter)
         
     if request.method == 'GET':
         status_filter = request.GET.getlist('status-filter')

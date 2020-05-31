@@ -13,7 +13,7 @@
 		<table>
 			<th>
 				<label for="select-priority" class="ticket-label">Priority</label>
-				<select name="priority" id="select-priority" class="ticket-select form-control" required="true">
+				<select name="priority" id="select-priority" class="ticket-select form-control selectpicker" required="true">
 					{% for priority in priority_list %}
 						<option value="{{ priority.priority }}" name="priority">{{ priority.priority }}</option>
 					{% endfor %}
