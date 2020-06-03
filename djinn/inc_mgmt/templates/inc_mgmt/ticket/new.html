@@ -24,7 +24,7 @@
 					<div class="new-ticket-attachment-wrap2">
 						<label>Attachment</label>
 					</div>
-					<input type="file" name="file" id="file-update" style="margin: 10px 0 -10px -10px;">
+					<input onchange="check_size()" type="file" name="file" id="file-update" style="margin: 10px 0 -10px -10px;">
 				</div>
 			</th>
 		</table>
@@ -42,4 +42,13 @@
 	{% if form.errors %}
 		<div class="alert alert-danger" role="alert">There was an error saving your ticket, please try again.</div>
 	{% endif %}
+{% endblock %}
+{% block script %}
+	function check_size() {
+		var file_size = document.getElementById('file-update').files[0].size;
+		if (file_size > 15728640) {
+			alert('File size limit is 15MB');
+			$('#file-update').val('');
+		}
+	};
 {% endblock %}

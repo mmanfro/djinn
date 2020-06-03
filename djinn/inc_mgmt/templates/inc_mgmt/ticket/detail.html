@@ -17,10 +17,8 @@
 		<textarea name="description" id="input-description" class="ticket-textarea form-control" disabled
 		placeholder="Detail the reason for opening the ticket" required="true" maxlength="500">{{ ticket.description }}</textarea>
 		{% if ticket.file %}
-			<div class="ticket-file">
-				<label for="ticket-file">Attachment:</label>
-				<a id="ticket-file" href='{{ ticket.file.url }}' download>{{ ticket.file|filename }}</a><br />
-			</div>
+			<label for="ticket-file">Attachment:</label>
+			<a id="ticket-file" href='{{ ticket.file.url }}' download>{{ ticket.file|filename }}</a><br />
 		{% endif %}
 		<table>
 			<th style="padding-right: 20px">
@@ -55,7 +53,7 @@
 				<th>
 					<textarea name="comment" id="text-update" class="ticket-textarea form-control" type="text"
 					placeholder="Add a comment and/or an attachment for the ticket and click 'Add' button" maxlength="500"></textarea>
-					<input type="file" name="file" id="file-update" style="margin-top: 10px">
+					<input onchange="check_size()" type="file" name="file" id="file-update" style="margin-top: 10px">
 				<th>
 				<th>
 					<a onclick="update_ticket('{{ ticket.id }}')" class="btn btn-lg btn-outline-primary btn-block ticket-btn-save"><i class="fas fa-plus"></i> Add</a>
@@ -75,7 +73,15 @@
 	{% endif %}
 {% endblock %}
 {% block script %}
-	function update_ticket(ticket_id){
+	function check_size() {
+		var file_size = document.getElementById('file-update').files[0].size;
+		if (file_size > 15728640) {
+			alert('File size limit is 15MB');
+			$('#file-update').val('');
+		}
+	};
+
+	function update_ticket(ticket_id) {
 		var csrftoken = Cookies.get('csrftoken');
 		function csrfSafeMethod(method) {
 			// These HTTP methods do not require CSRF protection

@@ -18,6 +18,11 @@ from django.contrib.auth import login, password_validation
 from functools import reduce
 import operator
 import json
+from djinn import settings
+from django import forms
+from django.template.defaultfilters import filesizeformat
+from django.utils.translation import ugettext_lazy as _
+
 
 
 def self_register(request):
@@ -156,6 +161,8 @@ def ticket_list(request, area_name, fast_status_filter=None):
 def ticket_new(request, area_name):
     if request.method == "POST":
         file = request.FILES['file'] if request.FILES else None
+        if file.size > settings.MAX_UPLOAD_SIZE:
+            file = None
         form = TicketCreationForm(request.POST)
         if form.is_valid():
             ticket = form.save(commit=False)
@@ -163,14 +170,15 @@ def ticket_new(request, area_name):
             ticket.created_by = request.user
             ticket.status = Status.objects.all().filter(status='Open')[0]
             ticket.priority = Priority.objects.all().filter(priority=request.POST.get('priority'))[0]
+            ticket.save()
             ticket.file = None if file == 'undefined' else file
             ticket.save()
             
-            return redirect('ticket_list', area_name=area_name)
+            return ticket_list(request, area_name, None)
     else:
-        prioritiy_list = Priority.objects.all()
+        priority_list = Priority.objects.all()
         context = {'area_name': area_name,
-                   'priority_list': prioritiy_list,
+                   'priority_list': priority_list,
                    }
         return render(request, 'inc_mgmt/ticket/new.html', context)
 
@@ -178,7 +186,7 @@ def ticket_new(request, area_name):
 def ticket_detail(request, ticket_id, area_name):
     ticket = Ticket.objects.all().filter(pk=ticket_id)[0]
     get_object_or_404(request.user.areas.all().filter(name=ticket.area))
-    ticketupdate_list = TicketUpdate.objects.all().filter(ticket=ticket).order_by('-posted_time')
+    ticketupdate_list = TicketUpdate.objects.all().filter(ticket=ticket).order_by('-time_posted')
     context = {'ticket': ticket,
                'ticketupdate_list': ticketupdate_list,
                }
@@ -209,20 +217,33 @@ def ticket_change(request, ticket_id, area_name):
 def ticket_update(request):
     data = {'updated': False,
         }
-    
+
     if request.method == "POST":
         ticket_id = request.POST.get('ticket_id', None)
         ticket = Ticket.objects.all().filter(pk=ticket_id)[0]
-        ticketupdate_list = TicketUpdate.objects.all().filter(ticket=ticket).order_by('-posted_time')
+        ticketupdate_list = TicketUpdate.objects.all().filter(ticket=ticket).order_by('-time_posted')
         file = request.FILES['file'] if request.FILES else None
+        if file.size > settings.MAX_UPLOAD_SIZE:
+            file = None
         form = TicketUpdateForm(request.POST)
         if form.is_valid():
             ticketupdate = form.save(commit=False)
             ticketupdate.ticket = ticket
-            ticketupdate.file = file
+            ticketupdate.file = file if file == 'undefined' else file
             ticketupdate.created_by = request.user
             ticketupdate.save()
             data['ticketupdate_list_html'] = render_to_string('inc_mgmt/ticket/detail_update_list.html', {'ticketupdate_list': ticketupdate_list,})
             data['updated'] = True
             
     return JsonResponse(data)
+
+# def validate_file(file):
+#     if file.size > settings.MAX_UPLOAD_SIZE:
+#         error = _(f'Maximum file size is {filesizeformat(settings.MAX_UPLOAD_SIZE)}. Current file has {filesizeformat(file.size)}.')
+#         return  error
+
+def chat_room(request, room_name):
+    return render(request, 'chat/room.html', {
+        'room_name': room_name
+    })
+

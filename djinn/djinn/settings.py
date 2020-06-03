@@ -39,7 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'channels',
     'inc_mgmt',
+    'chat',
+    
 ]
 
 MIDDLEWARE = [
@@ -137,6 +141,16 @@ MEDIA_ROOT = 'inc_mgmt/media/'
 
 MEDIA_URL = '/media/'
 
+# 2.5MB - 2621440
+# 5MB - 5242880
+# 10MB - 10485760
+# 20MB - 20971520
+# 50MB - 5242880
+# 100MB 104857600
+# 250MB - 214958080
+# 500MB - 429916160
+MAX_UPLOAD_SIZE = 15728640 # 15MB
+
 LOGIN_REDIRECT_URL = '/'
 
 LOGOUT_REDIRECT_URL = '/login/'
@@ -151,3 +165,14 @@ EMAIL_HOST_USER = 'djinnincmgmt'
 EMAIL_HOST_PASSWORD = 'Dji//123'
 
 EMAIL_USE_TLS = True
+
+# CHANNELS_REDIS
+ASGI_APPLICATION = 'djinn.routing.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("192.168.56.101", 6379)],
+        },
+    },
+}

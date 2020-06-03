@@ -4,11 +4,11 @@
 		<textarea name="_comment" id="input-update" class="ticket-textarea form-control" disabled maxlength="500">{{ ticketupdate.comment }}</textarea>
 		{% if ticketupdate.file %}
 			<div class="ticket-update-attachment">
-				<label for="file">Attachment:</label>
+				<label for="file" style="margin: 10px 0 0 -10px">Attachment:</label>
 				<a id="file" href='{{ ticketupdate.file.url }}' download>{{ ticketupdate.file|filename }}</a><br />
 			</div>
 		{% endif %}
-		<label class="label-ticket-update">Posted by {{ ticketupdate.created_by.name }} on {{ ticketupdate.posted_time }}</label>
+		<label class="label-ticket-update">Posted by {{ ticketupdate.created_by.name }} on {{ ticketupdate.time_posted }}</label>
 	</div>
 {% endfor %}
 <div id="older-update-list-div">
@@ -17,12 +17,10 @@
 			<textarea name="_comment" id="input-update" class="ticket-textarea form-control" disabled
 			maxlength="500">{{ ticketupdate.comment }}</textarea>
 			{% if ticketupdate.file %}
-				<div class="ticket-update-attachment">
-					<label for="file">Attachment:</label>
-					<a id="file" href='{{ ticketupdate.file.url }}' download>{{ ticketupdate.file|filename }}</a><br />
-				</div>
+				<label for="file" style="margin: 10px 0 0 -10px">Attachment:</label>
+				<a id="file" href='{{ ticketupdate.file.url }}' download>{{ ticketupdate.file|filename }}</a><br />
 			{% endif %}
-			<label class="label-ticket-update">Posted by {{ ticketupdate.created_by.name }} on {{ ticketupdate.posted_time }}</label>
+			<label class="label-ticket-update">Posted by {{ ticketupdate.created_by.name }} on {{ ticketupdate.time_posted }}</label>
 		</div>
 	{% endfor %}
 </div>
