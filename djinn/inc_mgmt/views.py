@@ -19,10 +19,10 @@ from functools import reduce
 import operator
 import json
 from djinn import settings
-from django import forms
-from django.template.defaultfilters import filesizeformat
-from django.utils.translation import ugettext_lazy as _
-
+from chat.models import ChatRoom
+import secrets
+from django.utils import timezone
+from random import randint
 
 
 def self_register(request):
@@ -161,8 +161,9 @@ def ticket_list(request, area_name, fast_status_filter=None):
 def ticket_new(request, area_name):
     if request.method == "POST":
         file = request.FILES['file'] if request.FILES else None
-        if file.size > settings.MAX_UPLOAD_SIZE:
-            file = None
+        if file:
+            if file.size > settings.MAX_UPLOAD_SIZE:
+                file = None
         form = TicketCreationForm(request.POST)
         if form.is_valid():
             ticket = form.save(commit=False)
@@ -223,8 +224,9 @@ def ticket_update(request):
         ticket = Ticket.objects.all().filter(pk=ticket_id)[0]
         ticketupdate_list = TicketUpdate.objects.all().filter(ticket=ticket).order_by('-time_posted')
         file = request.FILES['file'] if request.FILES else None
-        if file.size > settings.MAX_UPLOAD_SIZE:
-            file = None
+        if file:
+            if file.size > settings.MAX_UPLOAD_SIZE:
+                file = None
         form = TicketUpdateForm(request.POST)
         if form.is_valid():
             ticketupdate = form.save(commit=False)
@@ -237,13 +239,16 @@ def ticket_update(request):
             
     return JsonResponse(data)
 
-# def validate_file(file):
-#     if file.size > settings.MAX_UPLOAD_SIZE:
-#         error = _(f'Maximum file size is {filesizeformat(settings.MAX_UPLOAD_SIZE)}. Current file has {filesizeformat(file.size)}.')
-#         return  error
-
-def chat_room(request, room_name):
-    return render(request, 'chat/room.html', {
-        'room_name': room_name
-    })
-
+def chat_index(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        created_by = request.user
+        token = str(int(timezone.now().hour) + int(timezone.now().minute) + (int(timezone.now().second) * randint(1,9))) + (str(secrets.token_urlsafe(1))).replace('_', 'M').upper() 
+        token += str(request.user.id) + str(int(timezone.now().day) + (int(timezone.now().second) * randint(1,9))) + (str(secrets.token_urlsafe(1))).replace('_', 'M').upper()
+        chat = ChatRoom(name=name, created_by=created_by, token=token)
+        chat.save()
+        
+    chat_list = ChatRoom.objects.all().order_by('-time_created')
+    context = {'chat_list': chat_list}
+        
+    return render(request, 'inc_mgmt/chat/index.html', context)

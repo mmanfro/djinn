@@ -6,21 +6,59 @@
     <title>Chat Rooms</title>
 </head>
 <body>
-    What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
-    <input id="room-name-submit" type="button" value="Enter">
-
+	<div style="width: 60%">
+		<table>
+			<tr>
+				<td>
+					<input style="width: 600px" name="token" id="input-token" class="form-control" placeholder="Token" autofocus="true" type="text" maxlength="64" size="64">
+					<!-- <input style="margin-top: 5px" name="alias" id="input-alias" class="form-control" placeholder="Enter your name" type="text" maxlength="30" size="30" value="{{ user.name }}"> -->
+				</td>
+				<td>
+					<button style="margin-left: 5px" id="enter-room" class="btn btn-sm btn-outline-primary auto-width-btn"><i class="fas fa-door-open"></i> Enter room</button>
+				</td>
+			</tr>
+		</table> 
+	</div>
+	{% if user.is_staff %}
+	    <div id="chat-admin" style="width: 60%; margin-top: 20px; padding: 10px; border: 1px solid #000; border-radius: 5px">
+		    <form method="POST">
+    		{% csrf_token %}
+			    <table>
+			    	<tr>
+			    		<td>
+							<input name="name" id="input-name" class="form-control" style="width: auto" placeholder="Enter name" required type="text" maxlength="30" size="30">
+						</td>
+						<td>
+						    <button type="submit" style="margin-left: 5px" class="btn btn-sm btn-outline-primary auto-width-btn"><i class="fas fa-plus"></i> Create</button>
+						</td>
+					</tr>
+				</table>
+			</form>
+		    <table style="margin-top: 5px" class="table table-striped table-bordered table-hover">
+		    	<tr class="thead-dark">
+		    		<th scope="col">Name</th>
+		    		<th scope="col">Token</th>
+		    		<th scope="col">Active?</th>
+		    		<th scope="col">Created time</th>
+		    	</tr>
+		    	{% for chat in chat_list %}
+		    		<tr>
+		    			<td>{{ chat.name }}
+		    			<td>{{ chat.token }}
+		    			<td>{{ chat.is_active }}
+		    			<td>{{ chat.time_created }}
+		    		</tr>
+		    	{% endfor %}
+		    </table>
+		</div>
+	{% endif %}
     <script>
-        document.querySelector('#room-name-input').focus();
-        document.querySelector('#room-name-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#room-name-submit').click();
-            }
-        };
-
-        document.querySelector('#room-name-submit').onclick = function(e) {
-            var roomName = document.querySelector('#room-name-input').value;
-            window.location.pathname = '/chat/' + roomName + '/';
+        document.querySelector('#enter-room').onclick = function(e) {
+            var token = document.querySelector('#input-token').value;
+          	window.open(
+			    "/chat/room/" + token, "DJINN - Chat",
+			    "height=800,width=600,modal=yes,alwaysRaised=yes"
+			    );
         };
     </script>
 </body>

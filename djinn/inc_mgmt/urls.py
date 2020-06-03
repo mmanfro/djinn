@@ -21,6 +21,5 @@ urlpatterns = [
     path('<area_name>/ticket/<ticket_id>/detail/', v.ticket_detail, name='ticket_detail'),
     path('<area_name>/ticket/<ticket_id>/change/', v.ticket_change, name='ticket_change'),
     path('ajax/update_ticket/', v.ticket_update, name='ticket_update'),
-#     path('ajax/validate_file/', v.validate_file, name='validate_file'),
-    path('chat/<str:room_name>/', v.chat_room, name='room'),
+    path('chat/', v.chat_index, name='chat_index'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

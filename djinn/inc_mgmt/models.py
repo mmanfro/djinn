@@ -15,9 +15,6 @@ def get_upload_path(instance, filename):
     elif isinstance(instance, TicketUpdate):
         folder = instance.ticket.id
         path = "ticket/"
-    elif isinstance(instance, ChatRoom):
-        folder = instance.id
-        path = "chat/"
     
     return os.path.join(path + str(folder) + "/" + filename)
 
@@ -53,7 +50,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), max_length=255, unique=True)
     name = models.CharField(_('name'), max_length=30)
-    knoxid = models.CharField(_('knox ID'), max_length=20, blank=True)
+    knoxid = models.CharField(_('knox ID'), max_length=20, blank=True, null=True)
     phone = models.CharField(_('phone number'), max_length=14, blank=True, null=True, help_text=_('Only numbers.'))
     is_staff = models.BooleanField(_('staff status'), default=False, help_text=_('Designates whether the user can log into this admin site.'))
     is_active = models.BooleanField(_('active'), default=False, help_text=_('Designates whether this user should be treated as active. Unselect this instead of deleting accounts.'))
@@ -100,8 +97,8 @@ class Status(models.Model):
     
         
 class Ticket(models.Model):
-    title = models.CharField(_('title'), max_length = 50)
-    description = models.TextField(_('description'), max_length = 500)
+    title = models.CharField(_('title'), max_length=50)
+    description = models.TextField(_('description'), max_length=500)
     area = models.ForeignKey(Area, on_delete=models.PROTECT, null=True)
     priority = models.ForeignKey(Priority, on_delete=models.PROTECT, null=True)
     status = models.ForeignKey(Status, on_delete=models.PROTECT, null=True)
@@ -119,16 +116,3 @@ class TicketUpdate(models.Model):
     time_posted = models.DateTimeField(_('posting time'), default=timezone.now)
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE) 
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, editable=False)
-    
-    
-class ChatRoom(models.Model):
-    name = models.CharField(_('name'), max_length = 30)
-    # The content is saved in a .html file inside a folder created specific for each chat room
-    # Along with the files
-    content = models.TextField(_('content'))
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT, editable=False)
-    allowed_to_email = models.CharField(_('allowed emails'), max_length=255, null=True)
-    time_created = models.DateTimeField(_('creation time'), default=timezone.now, editable=False)
-    is_active = models.BooleanField(_('active'), default=True)
-    
-    

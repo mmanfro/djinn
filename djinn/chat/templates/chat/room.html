@@ -4,48 +4,76 @@
 <head>
     <meta charset="utf-8"/>
     <title>Chat Room</title>
+    {% include "inc_mgmt/base_js_css.html" %}
 </head>
-<body>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-    <input id="chat-message-input" type="text" size="100"><br>
-    <input id="chat-message-submit" type="button" value="Send">
-    {{ room_name|json_script:"room-name" }}
-    <script>
-        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+<body style="padding: 5px; height: 100%">
+	<input type="text" placeholder="Display name" id="display-name-input" style="margin-bottom: 5px" maxlength="30" size="30"></input>
+	<button style="margin-bottom: 5px" class="btn btn-sm btn-primary" id="display-name-btn" onclick="set_display_name()">Set</button>
+	<div id="chat-log" style="width: 100%; height: 70vh; border: 1px solid #000; border-radius: 3px; margin-bottom: 5px">
+	</div>
+    <input type="text" id="chat-message-input" style="width: 100%; margin-bottom: 5px"></input>
+    <br />
+    <input onchange="check_size()" type="file" name="file" id="file-update">
+    <input style="float: right" class="btn btn-primary" id="chat-message-submit" type="button" value="Send"> 
+    <br /><br /> <br /><br />
+    <input style="float: right" class="btn btn-secondary" id="leave-and-save" type="button" value="Leave chat">
+    {{ token|json_script:"token" }}
+    <script type="text/javascript">
+		const token = JSON.parse(document.getElementById('token').textContent);
+	
+// 		const chatSocket = new WebSocket(
+// 		    'ws://'
+// 		    + window.location.host
+// 		    + '/ws/chat/'
+// 		    + token
+// 		    + '/'
+// 		);
 
-        const chatSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/chat/'
-            + roomName
-            + '/'
-        );
-
-        chatSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.user + ': ' + data.message + '\n');
-        };
-
-        chatSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
-
-        document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#chat-message-submit').click();
-            }
-        };
-
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message,
-                'user': 'Marta'
-            }));
-			messageInputDom.value = '';
-        };
-    </script>
+	const chatSocket = new WebSocket('ws://127.0.0.1:8000/ws/chat/teste/')
+		
+		chatSocket.onmessage = function(e) {
+		    const data = JSON.parse(e.data);
+		    $('#chat-log').html(data.message);
+		};
+		
+		chatSocket.onclose = function(e) {
+		    console.error('Chat socket closed unexpectedly');
+		};
+		
+		document.querySelector('#chat-message-input').focus();
+		document.querySelector('#chat-message-input').onkeyup = function(e) {
+		    if (e.keyCode === 13) {  // enter, return
+		        document.querySelector('#chat-message-submit').click();
+		    }
+		};
+		
+		document.querySelector('#chat-message-submit').onclick = function(e) {
+			displayname = $('#display-name-input').val();
+			if (displayname != '') {			
+			    const messageInputDom = document.querySelector('#chat-message-input');
+			    const message = messageInputDom.value;
+			    chatSocket.send(JSON.stringify({
+			        'message': message,
+			        'user': displayname,
+			    }));
+				messageInputDom.value = '';
+			} else {
+				alert('You need to set a display name before sending a message.');
+			}
+		};
+		
+		function check_size() {
+			var file_size = document.getElementById('file-update').files[0].size;
+			if (file_size > 15728640) {
+				alert('File size limit is 15MB');
+				$('#file-update').val('');
+			}
+		};
+			
+		function set_display_name() {
+			$('#display-name-input').prop('disabled', true);
+			$('#display-name-btn').prop('disabled', true);
+		};
+	</script>
 </body>
 </html>

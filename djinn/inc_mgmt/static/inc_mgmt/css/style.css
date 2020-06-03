@@ -100,12 +100,34 @@ input[type="color"]:focus,
 	/* filter: drop-shadow(0.5px 0.5px 5px #000); */
 }
 
+.btn:active {
+	background-color: #774acb !important;
+	border-color: rgba(133, 83, 226, 0.8) !important;
+	box-shadow: 0 1px 1px rgba(133, 83, 226, 0.075) inset, 0 0 8px rgba(133, 83, 226, 0.6) !important;
+	outline: 0 none;
+}
+
+.btn:focus {
+	box-shadow: 0 1px 1px rgba(133, 83, 226, 0.075) inset, 0 0 8px rgba(133, 83, 226, 0.6) !important;
+	outline: 0 none;
+}
+
+.btn-primary:focus {
+	border-color: #8553e2 !important;
+	background-color: #774acb !important;
+}
+
 .btn-outline-primary {
 	color: #8553e2;
 	border: 2px solid #8553e2;
 }
 
 .btn-primary:hover {
+	border-color: #8553e2;
+	background-color: #774acb;
+}
+
+.btn-primary:disabled {
 	border-color: #8553e2;
 	background-color: #774acb;
 }
@@ -197,9 +219,11 @@ input[type="color"]:focus,
 
 .ticket-update-div {
 	width: fit-content;
-	padding: 10px 20px 10px 10px;
+	padding: 10px 20px 10px 15px;
 	margin: 20px 0 20px 0;
-	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);
+	/* box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24); */
+	border: 1px solid #000;
+	border-radius: 5px;
 }
 
 .update-list-div {

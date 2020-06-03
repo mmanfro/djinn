@@ -18,6 +18,9 @@
 						<li class="nav-item">
 							<a class="nav-link" href="{% url 'inc_mgmt:index' %}">Home<span class="sr-only">(current)</span></a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{% url 'inc_mgmt:chat_index' %}">Chat<span class="sr-only">(current)</span></a>
+						</li>
 						{% if user.is_staff %}
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -48,7 +51,7 @@
 			{% block content %}
 			{% endblock %}
 		</div>
-		<script>
+		<script type="text/javascript">
 			{% block script %}
 			{% endblock %}
 		</script>
