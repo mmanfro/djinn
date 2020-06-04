@@ -1,72 +1,133 @@
-<!-- chat/templates/chat/room.html -->
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
     <title>Chat Room</title>
     {% include "inc_mgmt/base_js_css.html" %}
+	<script src="{% static 'chat/js/dropzone.js' %}"></script>
 </head>
-<body style="padding: 5px; height: 100%">
+<body style="padding: 5px; height: 100%" onbeforeunload="return confirm()">
 	<input type="text" placeholder="Display name" id="display-name-input" style="margin-bottom: 5px" maxlength="30" size="30"></input>
 	<button style="margin-bottom: 5px" class="btn btn-sm btn-primary" id="display-name-btn" onclick="set_display_name()">Set</button>
-	<div id="chat-log" style="width: 100%; height: 70vh; border: 1px solid #000; border-radius: 3px; margin-bottom: 5px">
-	</div>
+		<div id="chat-log" style="width: 100%; height: 70vh; border: 1px solid #000; border-radius: 3px; margin-bottom: 5px; padding: 5px"></div>
     <input type="text" id="chat-message-input" style="width: 100%; margin-bottom: 5px"></input>
     <br />
-    <input onchange="check_size()" type="file" name="file" id="file-update">
+    <input onchange="check_size()" type="file" name="file" id="file-chat">
     <input style="float: right" class="btn btn-primary" id="chat-message-submit" type="button" value="Send"> 
     <br /><br /> <br /><br />
-    <input style="float: right" class="btn btn-secondary" id="leave-and-save" type="button" value="Leave chat">
+    <input style="float: right" class="btn btn-secondary" id="leave-and-save" type="button" value="Leave chat" onclick="save_chat()">
     {{ token|json_script:"token" }}
     <script type="text/javascript">
 		const token = JSON.parse(document.getElementById('token').textContent);
 	
-// 		const chatSocket = new WebSocket(
-// 		    'ws://'
-// 		    + window.location.host
-// 		    + '/ws/chat/'
-// 		    + token
-// 		    + '/'
-// 		);
-
-	const chatSocket = new WebSocket('ws://127.0.0.1:8000/ws/chat/teste/')
+		function connect() {
+			const chatSocket = new WebSocket(
+			    'ws://'
+			    + window.location.host
+			    + '/ws/chat/'
+			    + token
+			    + '/'
+			);
+			
+			chatSocket.onmessage = function(e) {
+			    const data = JSON.parse(e.data);
+			    displayname = $('#display-name-input').val();
+			    if (data.displayname == displayname) {
+			   		$('#chat-log').append(data.message_outgoing);
+			   	} else {
+			   		$('#chat-log').append(data.message_incoming);
+			   	}
+			};
 		
-		chatSocket.onmessage = function(e) {
-		    const data = JSON.parse(e.data);
-		    $('#chat-log').html(data.message);
-		};
+			chatSocket.onclose = function(e) {
+			    console.error('Chat socket closed unexpectedly');
+			    connect();
+			};
+			
+			document.querySelector('#chat-message-input').focus();
+			document.querySelector('#chat-message-input').onkeyup = function(e) {
+			    if (e.keyCode === 13) {  // enter, return
+			        document.querySelector('#chat-message-submit').click();
+			    }
+			};
 		
-		chatSocket.onclose = function(e) {
-		    console.error('Chat socket closed unexpectedly');
-		};
+			document.querySelector('#chat-message-submit').onclick = function(e) {
+				displayname = $('#display-name-input').val();
+				file = $("#file-chat")[0].files[0];
+				if (displayname != '') {
+					if (file != undefined) {
+						send_file(file);
+					}
+				    const messageInputDom = document.querySelector('#chat-message-input');
+				    const message = messageInputDom.value;
+				    if (message != '') {
+					    chatSocket.send(JSON.stringify({
+					        'message': message,
+					        'displayname': displayname,
+					    }));
+						messageInputDom.value = '';
+					}
+					
+					// File handling begins
+					function send_file(file) {
+						var csrftoken = Cookies.get('csrftoken');
+						function csrfSafeMethod(method) {
+							// These HTTP methods do not require CSRF protection
+							return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+						}
+						
+						$.ajaxSetup({
+							beforeSend: function(xhr, settings) {
+								if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+									xhr.setRequestHeader("X-CSRFToken", csrftoken);
+								}
+							}
+						});
+						
+						var formData = new FormData();
+						formData.append('file', file);
+						formData.append('token', token);
+						
+						$.ajax({
+							type: 'POST',
+							url: "{% url 'chat:send_file' %}",
+							data: formData,
+							dataType: 'json',
+							contentType: false,
+							processData: false, 
+							success: function (data) {
+								if (data.sent) {
+									chatSocket.send(JSON.stringify({
+								        'message': "<a download href='" + data.file_url + "'>" + data.file_name + " <i class='fas fa-file-download' style='color: #8553e2'></i></a>",
+								        'displayname': displayname,
+								    }));
+									$("#file-chat").val('');
+								} else {
+									alert("Don't mess with the file size you noob");
+								}
+							}
+						});
+					}
+						// File handling ends
+				} else {
+					alert('You need to set a display name before sending a message.');
+				}
+			};
+		}
+		connect();
 		
-		document.querySelector('#chat-message-input').focus();
-		document.querySelector('#chat-message-input').onkeyup = function(e) {
+		document.querySelector('#display-name-input').onkeyup = function(e) {
 		    if (e.keyCode === 13) {  // enter, return
-		        document.querySelector('#chat-message-submit').click();
+		        document.querySelector('#display-name-btn').click();
 		    }
 		};
 		
-		document.querySelector('#chat-message-submit').onclick = function(e) {
-			displayname = $('#display-name-input').val();
-			if (displayname != '') {			
-			    const messageInputDom = document.querySelector('#chat-message-input');
-			    const message = messageInputDom.value;
-			    chatSocket.send(JSON.stringify({
-			        'message': message,
-			        'user': displayname,
-			    }));
-				messageInputDom.value = '';
-			} else {
-				alert('You need to set a display name before sending a message.');
-			}
-		};
-		
 		function check_size() {
-			var file_size = document.getElementById('file-update').files[0].size;
-			if (file_size > 15728640) {
-				alert('File size limit is 15MB');
-				$('#file-update').val('');
+			var file_size = document.getElementById('file-chat').files[0].size;
+			if (file_size > 2621440) {
+				alert('File size limit is 2.5MB');
+				$('#file-chat').val('');
 			}
 		};
 			
@@ -74,6 +135,44 @@
 			$('#display-name-input').prop('disabled', true);
 			$('#display-name-btn').prop('disabled', true);
 		};
+		
+		function save_chat() {
+			var csrftoken = Cookies.get('csrftoken');
+			function csrfSafeMethod(method) {
+				// These HTTP methods do not require CSRF protection
+				return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+			}
+						
+			$.ajaxSetup({
+				beforeSend: function(xhr, settings) {
+					if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+						xhr.setRequestHeader("X-CSRFToken", csrftoken);
+					}
+				}
+			});
+			
+			var content = $('#chat-log').html();
+			var formData = new FormData();
+			formData.append('content', content);
+			formData.append('token', token);
+			
+			$.ajax({
+				type: 'POST',
+				url: "{% url 'chat:save_chat' %}",
+				data: formData,
+				dataType: 'json',
+				contentType: false,
+				processData: false, 
+				success: function (data) {
+					window.opener.parent.location.href = "{% url 'chat:index' %}";
+					window.close();
+				}
+			});
+		}
+		
+		function confirm() {
+			return 'confirm'
+		}
 	</script>
 </body>
 </html>

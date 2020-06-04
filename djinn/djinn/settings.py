@@ -132,13 +132,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
  
 STATICFILES_DIRS = [
+    'chat/static',
     'inc_mgmt/static',
     'djinn/static',
     '/var/www/inc_mgmt/static/',
     ]
 
-MEDIA_ROOT = 'inc_mgmt/media/'
-
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+ 
 MEDIA_URL = '/media/'
 
 # 2.5MB - 2621440
