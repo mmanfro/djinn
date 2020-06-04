@@ -20,7 +20,7 @@
 		</table> 
 	</div>
 	{% if user.is_staff %}
-	    <div id="chat-admin" style="width: 60%; margin-top: 20px; padding: 10px; border: 1px solid #000; border-radius: 5px">
+	    <div id="chat-admin" style="width: 60%; margin-top: 20px; padding: 10px 10px 0 10px; border: 1px solid #000; border-radius: 5px">
 		    <form method="POST">
     		{% csrf_token %}
 			    <table>
@@ -38,15 +38,33 @@
 		    	<tr class="thead-dark">
 		    		<th scope="col">Name</th>
 		    		<th scope="col">Token</th>
-		    		<th scope="col">Active?</th>
 		    		<th scope="col">Created time</th>
+		    		<th scope="col" style="text-align: center">Active?</th>
+		    		<th scope="col" style="text-align: center">Content</th>
+		    		<th scope="col" style="text-align: center">Delete</th>
 		    	</tr>
 		    	{% for chat in chat_list %}
 		    		<tr>
-		    			<td>{{ chat.name }}
-		    			<td>{{ chat.token }}
-		    			<td>{{ chat.is_active }}
-		    			<td>{{ chat.time_created }}
+		    			<td>{{ chat.name }}</td>
+		    			<td>{{ chat.token }}</td>
+		    			<td>{{ chat.time_created }}</td>
+		    			<td style="text-align: center; width: 100px">
+		    				{% if chat.is_active %}
+		    					<i style="color: #70ac5c" class="fas fa-check fa-lg"></i>
+		    				{% else %}
+		    					<i style="color: #e86434" class="fas fa-times fa-lg"></i>
+		    				{% endif %}
+		    			</td>
+		    			<td style="text-align: center; width: 100px">
+		    				{% if chat.content %}
+			    				<div onclick="open_log()" style="cursor: pointer"><i class="fas fa-comment fa-lg" style="color: #8553e2"></i></div>
+			    			{% else %}
+			    				<i class="fas fa-comment-slash fa-lg" style="color: #85888c"></i>
+			    			{% endif %}
+			    		</td>
+			    		<td style="text-align: center; width: 100px">
+			    			<div onclick="delete_chat({{ chat.id }})" style="cursor: pointer"><i class="fas fa-trash-alt fa-lg" style="color: #ff4d4d"></i></div>
+			    		</td>
 		    		</tr>
 		    	{% endfor %}
 		    </table>

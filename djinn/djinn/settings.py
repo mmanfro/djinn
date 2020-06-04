@@ -173,7 +173,8 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("192.168.56.101", 6379)],
+#             "hosts": [("192.168.56.101", 6379)],
+            "hosts": [("redis://:jQvECaFQwuYm8ku+8Zf+N8L95V35jmSyDv70A7YLdw8=@djinn.redis.cache.windows.net:6379")],
         },
     },
 }

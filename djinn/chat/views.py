@@ -4,6 +4,7 @@ from django.http.response import JsonResponse
 import ntpath
 from chat.models import ChatRoom
 from inc_mgmt.views import chat_index
+import os
 
 
 def index(request):
@@ -37,7 +38,7 @@ def save_chat(request):
     with open('content.html', 'w+') as output:
         output.write(str(content))
         chatroom.content.save('content.html', output, save=False)
-        output.delete()
+    os.remove(output.name)
     chatroom.is_active = False
     chatroom.save()
     

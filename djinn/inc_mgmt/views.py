@@ -248,7 +248,7 @@ def chat_index(request):
         chat = ChatRoom(name=name, created_by=created_by, token=token)
         chat.save()
         
-    chat_list = ChatRoom.objects.all().order_by('-time_created')
+    chat_list = ChatRoom.objects.all().filter(created_by=request.user).order_by('-time_created')
     context = {'chat_list': chat_list}
         
     return render(request, 'inc_mgmt/chat/index.html', context)
