@@ -1,4 +1,14 @@
-# djinn-inc-mgmt
-Incident management tool created with Django for learning.
-Also made simple on-demand chat rooms with Django Rest Framework, Channels and Redis.
-In the beginning Redis was running in a docker container inside an Ubuntu VM, now it runs on Azure.
+# DJINN
+Incident management tool created to learn coding again, because it's always useful. <br />
+<ul>
+  The main module was composed with:
+  <li>Django</li>
+  <li>Boostrap 4</li>
+  <li>PostgreSQL</li>
+</ul>
+<ul>
+  For the chat module I added:
+  <li>Django Rest Framework</li>
+  <li>Channels</li>
+  <li>Redis (previously running in a docker container inside an Ubuntu VM due to Windows Home not having Hyper-V, now on Azure)</li>
+</ul>
