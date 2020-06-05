@@ -1,7 +1,7 @@
 # DJINN
 Incident management tool created to learn coding again, because it's always useful. <br />
 <ul>
-  The main module was composed with:
+  The main module is composed by:
   <li>Django</li>
   <li>Boostrap 4</li>
   <li>PostgreSQL</li>
