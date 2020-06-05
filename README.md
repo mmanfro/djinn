@@ -10,5 +10,5 @@ Incident management tool created to learn coding again, because it's always usef
   For the chat module I added:
   <li>Django Rest Framework</li>
   <li>Channels</li>
-  <li>Redis (previously running in a docker container inside an Ubuntu VM due to Windows Home not having Hyper-V, now on Azure)</li>
+  <li>Redis (previously running in a docker container inside an Ubuntu VM due to Windows Home not having Hyper-V; now on Azure)</li>
 </ul>
