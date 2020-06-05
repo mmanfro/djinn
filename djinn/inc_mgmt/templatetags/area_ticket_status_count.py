@@ -1,4 +1,5 @@
 from django import template
+
 from inc_mgmt.models import Ticket
 
 

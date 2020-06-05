@@ -1,8 +1,9 @@
 from django.conf import settings
-from django.urls import path
 from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView as logout, LoginView as login
+from django.urls import path
+
 from inc_mgmt import views as v
 
 
