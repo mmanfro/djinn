@@ -22,6 +22,8 @@ def get_upload_path(instance, filename):
 
 class Area(models.Model):
     name = models.CharField(_('area name'), max_length=30, unique=True)
+    email = models.EmailField(_('area email address'), max_length=255, unique=True, null=True)
+    is_active = models.BooleanField(_('active'), default=True)
     
     def __str__(self):
         return self.name
@@ -89,6 +91,7 @@ class Priority(models.Model):
     
 class Status(models.Model):
     status = models.CharField(_('status'), max_length=20, unique=True)
+    is_active = models.BooleanField(_('active'), default=True)
     
     class Meta:
         verbose_name_plural = 'Status'

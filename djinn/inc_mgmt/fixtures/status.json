@@ -1,0 +1,26 @@
+[
+	{
+		"model": "inc_mgmt.status",
+		"pk": 1,
+		"fields": {
+			"status": "Open",
+			"active": "True"
+		}
+	},
+	{
+		"model": "inc_mgmt.status",
+		"pk": 2,
+		"fields": {
+			"status": "Ongoing",
+			"active": "True"
+		}
+	},
+	{
+		"model": "inc_mgmt.status",
+		"pk": 3,
+		"fields": {
+			"status": "Closed",
+			"active": "True"
+		}
+	},
+]
