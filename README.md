@@ -12,3 +12,9 @@ Incident management tool created with Python 3.6 to learn coding again, because 
   <li>Channels 2.4</li>
   <li>Redis (previously running in a docker container inside an Ubuntu VM due to Windows Home not having Hyper-V; now on Azure)</li>
 </ul>
+
+<ul>
+  <h3>@TODO</h3>
+  <li>Retrieve chat log</li>
+  <li>Ticket status flow</li>
+</ul>
