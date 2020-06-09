@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'djinn.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'djinn',
+        'NAME': 'postgres',
         'USER': 'djinn@djinn',
         'PASSWORD': 'Segred0!',
         'HOST': 'djinn.postgres.database.azure.com',
