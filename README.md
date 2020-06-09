@@ -3,7 +3,7 @@ Incident management tool created with Python 3.6 to learn coding again, because 
 <ul>
   The main module is composed by:
   <li>Django 3</li>
-  <li>Boostrap 4</li>
+  <li>Bootstrap 4</li>
   <li>PostgreSQL 12</li>
 </ul>
 <ul>
