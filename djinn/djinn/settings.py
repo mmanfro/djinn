@@ -26,7 +26,7 @@ SECRET_KEY = 'sls3@u#7tv(a=a@*vk%o=_w(6tk6cmc&f61+x%yw!@@aykh$s7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'inc_mgmt.User'
 
@@ -84,10 +84,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'djinn',
-        'USER': 'djinn',
-        'PASSWORD': 'Dj1//',
-        'HOST': '127.0.0.1',
-        'PORT': '60001',
+        'USER': 'djinn@djinn',
+        'PASSWORD': 'Segred0!',
+        'HOST': 'djinn.postgres.database.azure.com',
+        'PORT': '5432',
     }
 }
 

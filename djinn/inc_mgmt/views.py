@@ -1,3 +1,5 @@
+import operator
+import json
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from inc_mgmt.models import Area, Ticket, Status, Priority, User, TicketUpdate
@@ -16,19 +18,14 @@ from django.utils.encoding import force_bytes, force_text
 from django.http import response
 from django.contrib.auth import login, password_validation
 from functools import reduce
-import operator
-import json
 from djinn import settings
-from chat.models import ChatRoom
-import secrets
-from django.utils import timezone
-from random import randint
 
 
 def self_register(request):
     area_list = Area.objects.all().order_by('name')
     context = {'area_list': area_list,
-               'password_help_text': password_validation.password_validators_help_text_html(),}
+               'password_help_text': password_validation.password_validators_help_text_html(),
+               }
     if request.method == 'POST':
         areas = request.POST.getlist('areas')
         context['selected_areas'] = areas
@@ -238,17 +235,3 @@ def ticket_update(request):
             data['updated'] = True
             
     return JsonResponse(data)
-
-def chat_index(request):
-    if request.method == "POST":
-        name = request.POST.get('name')
-        created_by = request.user
-        token = str(int(timezone.now().hour) + int(timezone.now().minute) + (int(timezone.now().second) * randint(1,9))) + (str(secrets.token_urlsafe(1))).replace('_', 'M').upper() 
-        token += str(request.user.id) + str(int(timezone.now().day) + (int(timezone.now().second) * randint(1,9))) + (str(secrets.token_urlsafe(1))).replace('_', 'M').upper()
-        chat = ChatRoom(name=name, created_by=created_by, token=token)
-        chat.save()
-        
-    chat_list = ChatRoom.objects.all().filter(created_by=request.user).order_by('-time_created')
-    context = {'chat_list': chat_list}
-        
-    return render(request, 'inc_mgmt/chat/index.html', context)
