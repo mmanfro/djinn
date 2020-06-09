@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'sls3@u#7tv(a=a@*vk%o=_w(6tk6cmc&f61+x%yw!@@aykh$s7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -130,11 +130,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
  
 STATIC_ROOT = '/static/'
-
-STATICFILES_DIRS = [
-    '/inc_mgmt/static/',
-    '/static/',
-    ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
  
