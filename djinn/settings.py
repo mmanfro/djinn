@@ -131,11 +131,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
  
+STATIC_ROOT = '/var/www/djinn.com/static/'
+
 STATICFILES_DIRS = [
     'chat/static',
     'inc_mgmt/static',
     'djinn/static',
-    '/var/www/inc_mgmt/static/',
+    '/var/www/djinn/static/',
     ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
