@@ -116,8 +116,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en'
 
-USE_TZ = True 
-
 TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
@@ -134,9 +132,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = '/static/'
 
 STATICFILES_DIRS = [
-    'chat/static',
-    'inc_mgmt/static',
-    '/var/www/djinn/static/',
+    '/inc_mgmt/static/',
+    '/static/',
     ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
