@@ -129,11 +129,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
  
-STATIC_ROOT = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
- 
+# Files sent by the user or saved by the app
+
 MEDIA_URL = '/media/'
+ 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # 2.5MB - 2621440
 # 5MB - 5242880
