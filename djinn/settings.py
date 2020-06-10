@@ -127,7 +127,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Files sent by the user or saved by the app
 MEDIA_URL = '/media/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = f'https://djinn.blob.core.windows.net/media/'
 # MEDIA_URL = f'https://djinn.blob.core.windows.net/media/'
 
 
