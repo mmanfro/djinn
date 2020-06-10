@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'channels',
+    'storages',
     'inc_mgmt',
     'chat',
     
@@ -126,7 +127,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Files sent by the user or saved by the app
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = f'https://djinn.blob.core.windows.net/media/'
 
 
 # 2.5MB - 2621440
@@ -163,3 +165,10 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+
+#Azure storage of media files
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+AZURE_ACCOUNT_NAME = 'djinn'
+AZURE_ACCOUNT_KEY = 'VlSa2x+xiaw/Jz+NPJR9OrQt+AsxrvloRK0DJc3chl4uaYJePFsmyzylsGUT4LRLRL0w+F/3SKw88XFWaT70fA=='
+AZURE_CONTAINER = 'media'

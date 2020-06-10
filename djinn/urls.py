@@ -8,4 +8,4 @@ urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
     path('', include('inc_mgmt.urls', namespace='inc_mgmt')),
     path('chat/', include('chat.urls', namespace='chat')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL)
