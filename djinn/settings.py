@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'sls3@u#7tv(a=a@*vk%o=_w(6tk6cmc&f61+x%yw!@@aykh$s7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -126,9 +126,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Files sent by the user or saved by the app
-MEDIA_URL = '/media/'
-MEDIA_ROOT = f'https://djinn.blob.core.windows.net/media/'
-# MEDIA_URL = f'https://djinn.blob.core.windows.net/media/'
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = f'https://djinn.blob.core.windows.net/media/'
 
 
 # 2.5MB - 2621440

@@ -5,7 +5,7 @@
 		{% if ticketupdate.file %}
 			<div class="ticket-update-attachment">
 				<label for="file" style="margin: 10px 0 0 -10px">Attachment:</label>
-				<a id="file" href='{{ ticketupdate.file.url }}' download>{{ ticketupdate.file|filename }}</a><br />
+				<a id="file" onclick="download_file('{{ ticketupdate.file.name }}')" href="#">{{ ticketupdate.file|filename }}</a><br />
 			</div>
 		{% endif %}
 		<label class="label-ticket-update">Posted by {{ ticketupdate.created_by.name }} on {{ ticketupdate.time_posted }}</label>
@@ -18,12 +18,12 @@
 			maxlength="500">{{ ticketupdate.comment }}</textarea>
 			{% if ticketupdate.file %}
 				<label for="file" style="margin: 10px 0 0 -10px">Attachment:</label>
-				<a id="file" href='{{ ticketupdate.file.url }}' download>{{ ticketupdate.file|filename }}</a><br />
+				<a id="file" onclick="download_file('{{ ticketupdate.file.name }}')" href="#">{{ ticketupdate.file|filename }}</a><br />
 			{% endif %}
 			<label class="label-ticket-update">Posted by {{ ticketupdate.created_by.name }} on {{ ticketupdate.time_posted }}</label>
 		</div>
 	{% endfor %}
 </div>
 {% if ticketupdate_list|length > 3 %}
-	<a id="toggle-older-update-list" class="btn btn-lg btn-primary btn-block auto-width-btn" style="color: white; margin-top: 10px;">See more</a>
+	<a id="toggle-older-update-list" class="btn btn-lg btn-primary btn-block auto-width-btn" style="color: white !important; margin-top: 10px;">See more</a>
 {% endif %}

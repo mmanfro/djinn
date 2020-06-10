@@ -43,7 +43,7 @@
 		placeholder="Detail the reason for opening the ticket" required="true" maxlength="500">{{ ticket.description }}</textarea>
 		{% if ticket.file %}
 			<label for="ticket-file">Attachment:</label>
-			<a id="ticket-file" href='{{ ticket.file.url }}' download>{{ ticket.file|filename }}</a><br />
+			<a id="ticket-file" onclick="download_file('{{ ticket.file.name }}')" href="#">{{ ticket.file|filename }}</a><br />
 		{% endif %}
 		<table>
 			<th style="padding-right: 20px">
@@ -107,6 +107,7 @@
 	};
 
 	function update_ticket(ticket_id) {
+		$('#wait').css('visibility', 'visible');
 		var csrftoken = Cookies.get('csrftoken');
 		function csrfSafeMethod(method) {
 			// These HTTP methods do not require CSRF protection
@@ -139,6 +140,7 @@
 					$('#detail-update-list-ajax').html(data.ticketupdate_list_html);
 					$('#text-update').val('');
 					$('#file-update').val('');
+					$('#wait').css('visibility', 'hidden');
 				} else {
 					alert("Comment can't be blank");
 				}
@@ -159,4 +161,23 @@
 			$("#toggle-older-update-list").html(label);
 		});
 	});
+	
+	function download_file(blob) {
+		$('#wait').css('visibility', 'visible');
+		$.ajax({
+			type: 'GET',
+			url: '{% url 'return_final_url_to_ajax_get' %}',
+			data: {'blob': blob},
+			dataType: 'json', 
+			success: function (data) {
+				$('#wait').css('visibility', 'hidden');
+				const a = document.createElement("a");
+				a.href = data.url;
+				a.target = '_blank';
+				a.download = '';
+				a.click();
+				a.remove();
+			}
+		});
+	};
 {% endblock %}
