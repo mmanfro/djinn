@@ -1,7 +1,8 @@
 # DJINN
 <a href="https://djinn.azurewebsites.net/">djinn.azurewebsites.net</a>
 <br />
-Incident management tool created with Python 3.6 to learn coding again, because it's always useful. <br />
+Incident management tool created with Python 3.8 and Django to learn coding again, because it's always useful.
+<br />
 <ul>
   The main module is composed by:
   <li>Django 3</li>
@@ -13,6 +14,16 @@ Incident management tool created with Python 3.6 to learn coding again, because 
   <li>Django Rest Framework 3.11</li>
   <li>Channels 2.4</li>
   <li>Redis (previously running in a docker container inside an Ubuntu VM due to Windows Home not having Hyper-V; now on Azure)</li>
+</ul>
+<br />
+<ul>
+  More info:
+  <li>Running on Azure App Service</li>
+  <li>User and system dynamically uploaded files are stored in an Azure private container, and served with a 5 seconds expiring SAS</li>
+  <li>Azure storage integration using django-storages</li>
+  <li>Static files are served by WhiteNoise</li>
+  <li>Account registration with e-mail confirmation and 1 more step validation (by specific user group)</li>
+  <li>Used some Ajax to make the app more dynamic</li>
 </ul>
 <br />
 <ul>
