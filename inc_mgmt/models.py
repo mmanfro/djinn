@@ -81,6 +81,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Priority(models.Model):
     priority = models.CharField(_('priority'), max_length=30, unique=True)
+    is_active = models.BooleanField(_('active'), default=True)
     
     class Meta:
         verbose_name_plural = 'Priorities'

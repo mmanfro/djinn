@@ -1,25 +1,25 @@
 [
 	{
-		"model": "inc_mgmt.status",
+		"model": "inc_mgmt.priority",
 		"pk": 1,
 		"fields": {
-			"status": "Open",
+			"priority": "Low",
 			"is_active": "True"
 		}
 	},
 	{
-		"model": "inc_mgmt.status",
+		"model": "inc_mgmt.priority",
 		"pk": 2,
 		"fields": {
-			"status": "Ongoing",
+			"priority": "Medium",
 			"is_active": "True"
 		}
 	},
 	{
-		"model": "inc_mgmt.status",
+		"model": "inc_mgmt.priority",
 		"pk": 3,
 		"fields": {
-			"status": "Closed",
+			"priority": "High",
 			"is_active": "True"
 		}
 	}

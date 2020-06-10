@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'inc_mgmt.User'
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -79,7 +78,6 @@ WSGI_APPLICATION = 'djinn.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -94,7 +92,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -113,29 +110,23 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
-
 LANGUAGE_CODE = 'en'
-
 TIME_ZONE = 'America/Sao_Paulo'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
 STATIC_URL = '/static/'
- 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# Files sent by the user or saved by the app
 
+# Files sent by the user or saved by the app
 MEDIA_URL = '/media/'
- 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # 2.5MB - 2621440
 # 5MB - 5242880
@@ -147,20 +138,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # 500MB - 429916160
 MAX_UPLOAD_SIZE = 15728640 # 15MB
 
-LOGIN_REDIRECT_URL = '/'
 
+# Redirects
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
+
 
 # Email
 EMAIL_HOST = 'smtp.gmail.com'
-
 EMAIL_PORT = 587
-
 EMAIL_HOST_USER = 'djinnincmgmt'
-
 EMAIL_HOST_PASSWORD = 'Dji//123'
-
 EMAIL_USE_TLS = True
+
 
 # CHANNELS_REDIS
 ASGI_APPLICATION = 'djinn.routing.application'
@@ -168,7 +158,6 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-#             "hosts": [("192.168.56.101", 6379)],
             "hosts": [("redis://:jQvECaFQwuYm8ku+8Zf+N8L95V35jmSyDv70A7YLdw8=@djinn.redis.cache.windows.net:6379")],
         },
     },

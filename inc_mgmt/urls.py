@@ -1,9 +1,7 @@
 from django.conf import settings
 from django.conf.urls import url
-from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView as logout, LoginView as login
 from django.urls import path
-
 from inc_mgmt import views as v
 
 
@@ -22,4 +20,4 @@ urlpatterns = [
     path('<area_name>/ticket/<ticket_id>/detail/', v.ticket_detail, name='ticket_detail'),
     path('<area_name>/ticket/<ticket_id>/change/', v.ticket_change, name='ticket_change'),
     path('ajax/update_ticket/', v.ticket_update, name='ticket_update'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
