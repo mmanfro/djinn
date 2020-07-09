@@ -24,7 +24,7 @@ Incident management tool created with Python 3.8 and Django to learn coding agai
   <li>Azure storage integration using django-storages</li>
   <li>Static files are served by WhiteNoise</li>
   <li>Account registration with e-mail confirmation and 1 more step validation (by specific user group)</li>
-  <li>Used some Ajax to make the app more dynamic</li>
+  <li>Ajax requests to make the app dynamic</li>
 </ul>
 <br />
 <ul>
