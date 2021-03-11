@@ -19,7 +19,7 @@ Incident management tool created with Python 3.8 and Django to learn coding agai
 <br />
 <ul>
   More info:
-  <li>Running on Azure App Service</li>
+  <li>Running on Azure App Service (not anymore, since my credits depleted)</li>
   <li>User and system dynamically uploaded files are stored in an Azure private container, and served with a 5 seconds expiring SAS</li>
   <li>Azure storage integration using django-storages</li>
   <li>Static files are served by WhiteNoise</li>
