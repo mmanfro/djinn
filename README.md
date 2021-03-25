@@ -16,7 +16,7 @@ Incident management tool created with Python 3.8 and Django to learn coding agai
   <li>Channels 2.4</li>
   <li>Redis (previously running in a docker container inside an Ubuntu VM due to Windows Home not having Hyper-V; Now on Azure)</li>
 </ul>
-<br />
+<br/>
 <ul>
   More info:
   <li>Running on Azure App Service (not anymore, since my credits depleted)</li>
